@@ -35,10 +35,10 @@ public class PlayerController {
     }
 
     @GetMapping("/players")
-    ResponseEntity<CollectionModel<EntityModel<Player>>> findAll() {
+    ResponseEntity<CollectionModel<EntityModel<PlayerTO>>> findAll() {
 
-        List<EntityModel<Player>> players = StreamSupport.stream(playerService.findAll().spliterator(), false)
-                .map(player -> EntityModel.of(player, //
+        List<EntityModel<PlayerTO>> players = StreamSupport.stream(playerService.findAll().spliterator(), false)
+                .map(player -> EntityModel.of(playerMapper.mapsToTO(player), //
                         linkTo(methodOn(PlayerController.class).findOne(player.getId())).withSelfRel(), //
                         linkTo(methodOn(PlayerController.class).findAll()).withRel("players"))) //
                 .collect(Collectors.toList());
@@ -67,9 +67,9 @@ public class PlayerController {
     }
 
     @GetMapping("/players/{id}")
-    ResponseEntity<EntityModel<Player>> findOne(@PathVariable long id) {
+    ResponseEntity<EntityModel<PlayerTO>> findOne(@PathVariable long id) {
 
-        return playerService.findById(id).map(player -> EntityModel.of(player, //
+        return playerService.findById(id).map(player -> EntityModel.of(playerMapper.mapsToTO(player), //
                         linkTo(methodOn(PlayerController.class).findOne(player.getId())).withSelfRel(), //
                         linkTo(methodOn(PlayerController.class).findAll()).withRel("players"))).map(ResponseEntity::ok).
                 orElse(ResponseEntity.notFound().build());
