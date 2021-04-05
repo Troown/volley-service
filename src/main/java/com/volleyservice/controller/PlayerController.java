@@ -37,14 +37,16 @@ public class PlayerController {
     @GetMapping("/players")
     ResponseEntity<CollectionModel<EntityModel<Player>>> findAll() {
 
-        List<EntityModel<Player>> employees = StreamSupport.stream(playerService.findAll().spliterator(), false)
-                .map(employee -> EntityModel.of(employee, //
-                        linkTo(methodOn(PlayerController.class).findOne(employee.getId())).withSelfRel(), //
+        List<EntityModel<Player>> players = StreamSupport.stream(playerService.findAll().spliterator(), false)
+                .map(player -> EntityModel.of(player, //
+                        linkTo(methodOn(PlayerController.class).findOne(player.getId())).withSelfRel(), //
                         linkTo(methodOn(PlayerController.class).findAll()).withRel("players"))) //
                 .collect(Collectors.toList());
 
+
+
         return ResponseEntity.ok( //
-                CollectionModel.of(employees, //
+                CollectionModel.of(players, //
                         linkTo(methodOn(PlayerController.class).findAll()).withSelfRel()));
     }
     @PostMapping("/players")
@@ -53,12 +55,12 @@ public class PlayerController {
         try {
             Player savedPlayer = playerService.save(playerMapper.mapsToEntity(playerRequestTO));
 
-            EntityModel<PlayerTO> employeeResource = EntityModel.of(playerMapper.mapsToTO(savedPlayer), //
+            EntityModel<PlayerTO> playerResource = EntityModel.of(playerMapper.mapsToTO(savedPlayer), //
                     linkTo(methodOn(PlayerController.class).findOne(savedPlayer.getId())).withSelfRel());
 
             return ResponseEntity //
-                    .created(new URI(employeeResource.getRequiredLink(IanaLinkRelations.SELF).getHref())) //
-                    .body(employeeResource);
+                    .created(new URI(playerResource.getRequiredLink(IanaLinkRelations.SELF).getHref())) //
+                    .body(playerResource);
         } catch (URISyntaxException e) {
             return ResponseEntity.badRequest().body("Unable to create " + playerRequestTO);
         }
