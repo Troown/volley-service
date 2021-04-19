@@ -43,8 +43,6 @@ public class PlayerController {
                         linkTo(methodOn(PlayerController.class).findAll()).withRel("players"))) //
                 .collect(Collectors.toList());
 
-
-
         return ResponseEntity.ok( //
                 CollectionModel.of(players, //
                         linkTo(methodOn(PlayerController.class).findAll()).withSelfRel()));
