@@ -9,6 +9,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -47,8 +48,9 @@ public class PlayerController {
                 CollectionModel.of(players, //
                         linkTo(methodOn(PlayerController.class).findAll()).withSelfRel()));
     }
+
     @PostMapping("/players")
-    ResponseEntity<?> newPlayer (@RequestBody PlayerRequestTO playerRequestTO) {
+    ResponseEntity<?> newPlayer (@RequestBody @Validated PlayerRequestTO playerRequestTO) {
 
         try {
             Player savedPlayer = playerService.save(playerMapper.mapsToEntity(playerRequestTO));
@@ -71,5 +73,6 @@ public class PlayerController {
                         linkTo(methodOn(PlayerController.class).findOne(player.getId())).withSelfRel(), //
                         linkTo(methodOn(PlayerController.class).findAll()).withRel("players"))).map(ResponseEntity::ok).
                 orElse(ResponseEntity.notFound().build());
+
     }
 }

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -14,5 +16,6 @@ public class PlayerRequestTO {
     String surname;
     int number;
     String teamName;
+    @NotNull
     LocalDate dateOfBirth;
 }
