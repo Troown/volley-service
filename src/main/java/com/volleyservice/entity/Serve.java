@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
+//@Entity
 public class Serve {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
