@@ -113,4 +113,17 @@ public class PlayerControllerIntegrationTest {
 
     }
 
+    @Test
+    public void addPlayerWithNullValueAndCheckResponseIsBadRequest  () throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/players")
+                .contentType(MediaType.APPLICATION_JSON).content("{\n" +
+                "  \"name\": \null,\n" +
+                "  \"surname\": \"Anderson\",\n" +
+                "  \"number\": 1,\n" +
+                "  \"teamName\": \"USA\",\n" +
+                "  \"dateOfBirth\": \"1991-01-01\"\n" +
+                "}")).andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+    }
+
 }

@@ -62,7 +62,7 @@ public class PlayerController {
                     .created(new URI(playerResource.getRequiredLink(IanaLinkRelations.SELF).getHref())) //
                     .body(playerResource);
         } catch (URISyntaxException e) {
-            return ResponseEntity.badRequest().body("Unable to create " + playerRequestTO);
+            return ResponseEntity.badRequest().body("Unable to create" + playerRequestTO); //why in response body message = ""????
         }
     }
 
