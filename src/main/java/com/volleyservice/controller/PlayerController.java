@@ -5,6 +5,7 @@ import com.volleyservice.mapper.PlayerMapper;
 import com.volleyservice.service.PlayerService;
 import com.volleyservice.to.PlayerRequestTO;
 import com.volleyservice.to.PlayerTO;
+import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -24,21 +25,17 @@ import java.util.stream.StreamSupport;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@AllArgsConstructor
 @RestController
 public class PlayerController {
 
     private final PlayerMapper playerMapper;
     private final PlayerService playerService;
 
-    public PlayerController(PlayerMapper playerMapper, PlayerService playerService) {
-        this.playerMapper = playerMapper;
-        this.playerService = playerService;
-    }
-
     @GetMapping("/players")
     ResponseEntity<CollectionModel<EntityModel<PlayerTO>>> findAll() {
 
-        List<EntityModel<PlayerTO>> players = StreamSupport.stream(playerService.findAll().spliterator(), false)
+        List<EntityModel<PlayerTO>> players = playerService.findAll().stream()
                 .map(player -> EntityModel.of(playerMapper.mapsToTO(player), //
                         linkTo(methodOn(PlayerController.class).findOne(player.getId())).withSelfRel(), //
                         linkTo(methodOn(PlayerController.class).findAll()).withRel("players"))) //
@@ -52,12 +49,11 @@ public class PlayerController {
     @PostMapping("/players")
     ResponseEntity<?> newPlayer (@RequestBody @Validated PlayerRequestTO playerRequestTO) {
 
+        Player savedPlayer = playerService.save(playerMapper.mapsToEntity(playerRequestTO));
+
+        EntityModel<PlayerTO> playerResource = EntityModel.of(playerMapper.mapsToTO(savedPlayer), //
+                linkTo(methodOn(PlayerController.class).findOne(savedPlayer.getId())).withSelfRel());
         try {
-            Player savedPlayer = playerService.save(playerMapper.mapsToEntity(playerRequestTO));
-
-            EntityModel<PlayerTO> playerResource = EntityModel.of(playerMapper.mapsToTO(savedPlayer), //
-                    linkTo(methodOn(PlayerController.class).findOne(savedPlayer.getId())).withSelfRel());
-
             return ResponseEntity //
                     .created(new URI(playerResource.getRequiredLink(IanaLinkRelations.SELF).getHref())) //
                     .body(playerResource);
