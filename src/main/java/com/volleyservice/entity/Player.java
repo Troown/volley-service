@@ -28,6 +28,7 @@ public class Player {
         this.surname = surname;
         this.number = number;
         this.teamName = teamName;
+
         this.dateOfBirth = dateOfBirth;
     }
 }
