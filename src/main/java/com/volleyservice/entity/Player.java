@@ -23,6 +23,14 @@ public class Player {
     private String teamName;
     private LocalDate dateOfBirth;
 
+    public Player(String name) {
+        this.name = name;
+        this.surname = "surname";
+        this.number = 99;
+        this.teamName = "undefined";
+        this.dateOfBirth = LocalDate.parse("1900-01-01");
+    }
+
     public Player(String name, String surname, int number, String teamName, LocalDate dateOfBirth) {
         this.name = name;
         this.surname = surname;
