@@ -16,28 +16,23 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-
     private String name;
     private String surname;
-    private int number;
-    private String teamName;
     private LocalDate dateOfBirth;
+    private Integer rankingPoints;
 
-    public Player(String name) {
+    public Player(String name, String surname) {
         this.name = name;
-        this.surname = "surname";
-        this.number = 99;
-        this.teamName = "undefined";
+        this.surname = surname;
+        this.rankingPoints = 0;
         this.dateOfBirth = LocalDate.parse("1900-01-01");
     }
 
-    public Player(String name, String surname, int number, String teamName, LocalDate dateOfBirth) {
+    public Player(String name, String surname, LocalDate dateOfBirth) {
         this.name = name;
         this.surname = surname;
-        this.number = number;
-        this.teamName = teamName;
-
         this.dateOfBirth = dateOfBirth;
+        this.rankingPoints = 0;
     }
 }
 

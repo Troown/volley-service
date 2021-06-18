@@ -9,11 +9,10 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name="player")
+
 public class PlayerTO {
     String name;
     String surname;
-    int number;
-    String teamName;
+    Integer rankingPoints;
     boolean isAdult;
 }

@@ -14,8 +14,5 @@ import java.time.LocalDate;
 public class PlayerRequestTO {
     String name;
     String surname;
-    int number;
-    String teamName;
-    @NotNull
     LocalDate dateOfBirth;
 }

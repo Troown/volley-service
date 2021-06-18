@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.*;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { VolleyServiceApplication.class })
 @WebAppConfiguration(value = "")
-@ActiveProfiles("test")
+
 
 public class PlayerControllerIntegrationTest {
 
@@ -51,7 +51,6 @@ public class PlayerControllerIntegrationTest {
 
         final ServletContext servletContext = webApplicationContext.getServletContext();
 
-
         assertNotNull(servletContext);
         assertTrue(servletContext instanceof MockServletContext);
         assertNotNull(webApplicationContext.getBean("playerController"));
@@ -59,71 +58,23 @@ public class PlayerControllerIntegrationTest {
     }
     @Test
     public void addPlayerAndCompareResponseBodyGetAllPlayersAndCompareResponseBody() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/players").contentType(MediaType.APPLICATION_JSON).content("{\n" +
-                "  \"name\": \"Mat\",\n" +
-                "  \"surname\": \"Anderson\",\n" +
-                "  \"number\": 1,\n" +
-                "  \"teamName\": \"USA\",\n" +
-                "  \"dateOfBirth\": \"1991-01-01\"\n" +
-                "}")).andExpect(MockMvcResultMatchers.status().isCreated())
+        DatabaseLoader dl = new DatabaseLoader();
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/players").contentType(MediaType.APPLICATION_JSON).
+                content(dl.postRequestBody())).andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json"))
-                .andExpect(MockMvcResultMatchers.content().json("{\n" +
-                        "  \"name\": \"Mat\",\n" +
-                        "  \"surname\": \"Anderson\",\n" +
-                        "  \"number\": 1,\n" +
-                        "  \"teamName\": \"USA\",\n" +
-                        "  \"adult\": true,\n" +
-                        "  \"_links\": {\n" +
-                        "    \"self\": {\n" +
-                        "      \"href\": \"http://localhost/players/1\"\n" +//need to change in all links, instead of: "href": "http://localhost:8080/players" as it is in swagger
-                        "    }\n" +
-                        "  }\n" +
-                        "}"));
+                .andExpect(MockMvcResultMatchers.content().json(dl.postResponseBody()));
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/players"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json"))
-                .andExpect(MockMvcResultMatchers.content().json("{\n" +
-                        "  \"_embedded\": {\n" +
-                        "    \"playerTOList\": [\n" +
-                        "      {\n" +
-                        "        \"name\": \"Mat\",\n" +
-                        "        \"surname\": \"Anderson\",\n" +
-                        "        \"number\": 1,\n" +
-                        "        \"teamName\": \"USA\",\n" +
-                        "        \"adult\": true,\n" +
-                        "        \"_links\": {\n" +
-                        "          \"self\": {\n" +
-                        "            \"href\": \"http://localhost/players/1\"\n" +
-                        "          },\n" +
-                        "          \"players\": {\n" +
-                        "            \"href\": \"http://localhost/players\"\n" +
-                        "          }\n" +
-                        "        }\n" +
-                        "      }\n" +
-                        "    ]\n" +
-                        "  },\n" +
-                        "  \"_links\": {\n" +
-                        "    \"self\": {\n" +
-                        "      \"href\": \"http://localhost/players\"\n" +
-                        "    }\n" +
-                        "  }\n" +
-                        "}"));
-
-
+                .andExpect(MockMvcResultMatchers.content().json(dl.getMethodResponse()));
     }
 
     @Test
     public void addPlayerWithNullValueAndCheckResponseIsBadRequest  () throws Exception {
+        DatabaseLoader dl = new DatabaseLoader();
         this.mockMvc.perform(MockMvcRequestBuilders.post("/players")
-                .contentType(MediaType.APPLICATION_JSON).content("{\n" +
-                "  \"name\": \null,\n" +
-                "  \"surname\": \"Anderson\",\n" +
-                "  \"number\": 1,\n" +
-                "  \"teamName\": \"USA\",\n" +
-                "  \"dateOfBirth\": \"1991-01-01\"\n" +
-                "}")).andExpect(MockMvcResultMatchers.status().isBadRequest());
-
+                .contentType(MediaType.APPLICATION_JSON).content(dl.postWithNull())).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
-
 }

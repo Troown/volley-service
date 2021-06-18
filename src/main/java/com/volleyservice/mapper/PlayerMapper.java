@@ -13,19 +13,15 @@ import java.time.Period;
 public class PlayerMapper {
 
     public Player mapsToEntity(PlayerRequestTO playerRequestTO) {
-        return new Player(playerRequestTO.getName(), playerRequestTO.getSurname(), playerRequestTO.getNumber(),
-                playerRequestTO.getTeamName(), playerRequestTO.getDateOfBirth());
+        return new Player(playerRequestTO.getName(), playerRequestTO.getSurname(), playerRequestTO.getDateOfBirth());
     }
 
     public PlayerTO mapsToTO (Player player) {
-        return new PlayerTO(player.getName(),player.getSurname(),player.getNumber(),
-                player.getTeamName(), isAdult(player.getDateOfBirth()));
+        return new PlayerTO(player.getName(), player.getSurname(), player.getRankingPoints(),
+                isAdult(player.getDateOfBirth()));
     }
 
-
     private boolean isAdult(LocalDate dateOfBirth) {
-        if ((Period.between(dateOfBirth, LocalDate.now()).getYears()) >= 18) {
-            return true;
-        } else return false;
+        return (Period.between(dateOfBirth, LocalDate.now()).getYears()) >= 18;
     }
 }
