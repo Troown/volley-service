@@ -45,21 +45,6 @@ public class PlayerController {
                         linkTo(methodOn(PlayerController.class).findAll()).withSelfRel()));
     }
 
-//    @GetMapping("/players")
-//    ResponseEntity<CollectionModel<EntityModel<PlayerTO>>> findAll() {
-//
-//        List<EntityModel<PlayerTO>> players = playerService.findAll().stream()
-//                .map(player -> EntityModel.of(playerMapper.mapsToTO(player),
-//                        linkTo(methodOn(PlayerController.class).findOne(player.getId())).withSelfRel(),
-//                        linkTo(methodOn(PlayerController.class).findAll()).withRel("players")))
-//                .collect(Collectors.toList());
-//
-//        return ResponseEntity.ok(
-//                CollectionModel.of(players,
-//                        linkTo(methodOn(PlayerController.class).findAll()).withSelfRel()));
-//    }
-
-
     @PostMapping("/players")
     ResponseEntity<?> newPlayer(@RequestBody @Validated PlayerRequestTO playerRequestTO) {
 

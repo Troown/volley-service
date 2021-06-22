@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @NoArgsConstructor
 @Component
 public class DatabaseLoader {
@@ -18,7 +20,10 @@ public class DatabaseLoader {
     CommandLineRunner init(PlayerRepository repository) {
 
         return args -> {
-            repository.save(new Player("Kuba", "Zdybek"));
+            repository.saveAll(List.of(
+                    new Player("Kuba", "Zdybek"),
+                    new Player("Daniel", "Pliński"),
+                    new Player("Dominik", "Witczak")));
         };
 
     }

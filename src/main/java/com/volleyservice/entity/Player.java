@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Data
 @Entity
-
 public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

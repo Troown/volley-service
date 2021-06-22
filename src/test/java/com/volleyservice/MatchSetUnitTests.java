@@ -1,6 +1,6 @@
 package com.volleyservice;
 
-import com.volleyservice.entity.BVBTeam;
+import com.volleyservice.entity.Team;
 import com.volleyservice.entity.MatchSet;
 import com.volleyservice.entity.Player;
 import org.junit.jupiter.api.Assertions;
@@ -11,10 +11,10 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MatchSetUnitTests {
-    BVBTeam r1 = new BVBTeam(List.of(new Player("Kuba", "Zdybek"),
+    Team r1 = new Team(List.of(new Player("Kuba", "Zdybek"),
                  new Player("Paweł", "Lewandowski")));
 
-    BVBTeam r16 = new BVBTeam(List.of(new Player("Mateusz", "Kańczok"),
+    Team r16 = new Team(List.of(new Player("Mateusz", "Kańczok"),
                   new Player("Maciej", "Kałuża")));
 
     @Test
@@ -44,10 +44,10 @@ public class MatchSetUnitTests {
         MatchSet set3 = new MatchSet(15, Map.of(r1, 18, r16, 21));
         MatchSet set4 = new MatchSet(15, Map.of(r1, 34, r16, 32));
 //        When
-        Optional<BVBTeam> result1 = set1.getWinnerOfSet();
-        Optional<BVBTeam> result2 = set2.getWinnerOfSet();
-        Optional<BVBTeam> result3 = set3.getLoserOfSet();
-        Optional<BVBTeam> result4 = set4.getLoserOfSet();
+        Optional<Team> result1 = set1.getWinnerOfSet();
+        Optional<Team> result2 = set2.getWinnerOfSet();
+        Optional<Team> result3 = set3.getLoserOfSet();
+        Optional<Team> result4 = set4.getLoserOfSet();
 //        Then
         Assertions.assertEquals(Optional.of(r1), result1);
         Assertions.assertEquals(Optional.empty(), result2);
