@@ -19,8 +19,8 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    @ToString.Exclude
     @OneToMany
+
     private List<Player> players;
     private String teamName;
     private int rankingPoints;

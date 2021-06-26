@@ -55,8 +55,8 @@ public class TeamController {
 
     @GetMapping("/teams/{id}")
     ResponseEntity<EntityModel<Team>> findOne(@PathVariable long id) {
-        return teamService.findById(id).map(bvbTeam -> EntityModel.of((bvbTeam),
-                linkTo(methodOn(TeamController.class).findOne(bvbTeam.getId())).withSelfRel(),
+        return teamService.findById(id).map(team -> EntityModel.of((team),
+                linkTo(methodOn(TeamController.class).findOne(team.getId())).withSelfRel(),
                 linkTo(methodOn(TeamController.class).findAll()).withRel("teams"))).map(ResponseEntity::ok).
                 orElse(ResponseEntity.notFound().build());
     }

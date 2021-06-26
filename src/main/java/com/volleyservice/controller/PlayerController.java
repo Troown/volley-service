@@ -1,5 +1,10 @@
 package com.volleyservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.volleyservice.entity.Player;
 
 import com.volleyservice.mapper.PlayerMapper;
@@ -10,16 +15,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -32,12 +35,13 @@ public class PlayerController {
 
     private final PlayerMapper playerMapper;
     private final PlayerService playerService;
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/players")
     ResponseEntity<CollectionModel<EntityModel<PlayerTO>>> findAll() {
         List<EntityModel<PlayerTO>> players = playerService.findAll().stream()
                 .map(player -> EntityModel.of(playerMapper.mapsToTO(player),
-                        linkTo(methodOn(PlayerController.class).findOne(player.getId())).withSelfRel() ))
+                        linkTo(methodOn(PlayerController.class).findOne(player.getId())).withSelfRel()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(
@@ -68,6 +72,27 @@ public class PlayerController {
                 linkTo(methodOn(PlayerController.class).findOne(player.getId())).withSelfRel(), //
                 linkTo(methodOn(PlayerController.class).findAll()).withRel("players"))).map(ResponseEntity::ok).
                 orElse(ResponseEntity.notFound().build());
+    }
 
+
+    @PatchMapping(path = "/players/{id}", consumes = "application/json-patch+json")
+    public ResponseEntity<Player> updatePlayer(@PathVariable long id, @RequestBody JsonPatch patch) {
+            Player player = playerService.findById(id).orElseThrow(IllegalArgumentException::new);
+        try{
+            Player playerPatched = applyPatchToPlayer(patch, player);
+            playerService.save(playerPatched);
+            return ResponseEntity.ok(playerPatched);
+
+        } catch (JsonPatchException jsonPatchException) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (JsonProcessingException jsonProcessingException) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+    }
+    private Player applyPatchToPlayer(JsonPatch patch, Player targetPlayer)
+            throws JsonPatchException, JsonProcessingException {
+        JsonNode patched = patch.apply(objectMapper.convertValue(targetPlayer, JsonNode.class));
+        return objectMapper.treeToValue(patched, Player.class);
     }
 }

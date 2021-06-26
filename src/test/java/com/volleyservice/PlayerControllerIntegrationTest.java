@@ -1,5 +1,7 @@
 package com.volleyservice;
 
+import com.volleyservice.entity.PlayerRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,21 +30,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.hamcrest.Matchers.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { VolleyServiceApplication.class })
+@ContextConfiguration(classes = {VolleyServiceApplication.class})
 @WebAppConfiguration(value = "")
-
-
 public class PlayerControllerIntegrationTest {
 
 
     @Autowired
     private WebApplicationContext webApplicationContext;
 
+    @Autowired
+    private PlayerRepository playerRepository;
+
     private MockMvc mockMvc;
 
     @BeforeEach
     public void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+    }
+
+    @AfterEach
+    public void cleanUp() {
+        playerRepository.deleteAll();
     }
 
 
@@ -56,6 +64,7 @@ public class PlayerControllerIntegrationTest {
         assertNotNull(webApplicationContext.getBean("playerController"));
         assertNotNull(webApplicationContext.getBean("databaseLoader"));
     }
+
     @Test
     public void addPlayerAndCompareResponseBodyGetAllPlayersAndCompareResponseBody() throws Exception {
         DatabaseLoader dl = new DatabaseLoader();
@@ -72,9 +81,41 @@ public class PlayerControllerIntegrationTest {
     }
 
     @Test
-    public void addPlayerWithNullValueAndCheckResponseIsBadRequest  () throws Exception {
+    public void addPlayerWithNullValueAndCheckResponseIsBadRequest() throws Exception {
         DatabaseLoader dl = new DatabaseLoader();
         this.mockMvc.perform(MockMvcRequestBuilders.post("/players")
                 .contentType(MediaType.APPLICATION_JSON).content(dl.postWithNull())).andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void addPlayerAndUpdateHisDateOfBirthAndRankingPointsUsingPatchMethod() throws Exception {
+        DatabaseLoader dl = new DatabaseLoader();
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/players").contentType(MediaType.APPLICATION_JSON)
+                .content(dl.postRequestBody())).andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json"))
+                .andExpect(MockMvcResultMatchers.content().json(dl.postResponseBody()));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/players/1")
+                .contentType("application/json-patch+json").content("[\n" +
+                        "    { \"op\": \"replace\", \"path\": \"/dateOfBirth\", \"value\": \"1992-06-09\" },\n" +
+                        "    { \"op\": \"replace\", \"path\": \"/rankingPoints\", \"value\": \"330\" }\n" +
+                        "]")).andExpect(MockMvcResultMatchers.status().isOk());
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/players/1").content("{\n" +
+                "  \"name\": \"Mateusz\",\n" +
+                "  \"surname\": \"Kańczok\",\n" +
+                "  \"rankingPoints\": 330,\n" +
+                "  \"adult\": true,\n" +
+                "  \"_links\": {\n" +
+                "    \"self\": {\n" +
+                "      \"href\": \"http://localhost:8080/players/1\"\n" +
+                "    },\n" +
+                "    \"players\": {\n" +
+                "      \"href\": \"http://localhost:8080/players\"\n" +
+                "    }\n" +
+                "  }\n" +
+                "}")).andExpect(MockMvcResultMatchers.status().isOk());
+
     }
 }
