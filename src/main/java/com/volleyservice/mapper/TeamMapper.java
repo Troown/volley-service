@@ -3,28 +3,36 @@ package com.volleyservice.mapper;
 import com.volleyservice.entity.Player;
 import com.volleyservice.entity.PlayerRepository;
 import com.volleyservice.entity.Team;
+import com.volleyservice.exception.ValidationException;
 import com.volleyservice.service.PlayerService;
 import com.volleyservice.service.TeamService;
 import com.volleyservice.to.TeamRequestTO;
 import com.volleyservice.to.TeamTO;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class TeamMapper {
-    TeamService teamService;
+    private final TeamService teamService;
+    private final PlayerService playerService;
 
 
     public Team mapsToEntity(PlayerRepository repository, TeamRequestTO teamRequestTO) {
-        PlayerService playerService = new PlayerService(repository);
 
-        Optional<Player> player1 = playerService.findById(teamRequestTO.getPlayerNumberOneId());
-        Optional<Player> player2 = playerService.findById(teamRequestTO.getPlayerNumberTwoId());
+        Player player1 = getPlayer(teamRequestTO.getPlayerNumberOneId());
+        Player player2 = getPlayer(teamRequestTO.getPlayerNumberTwoId());
+        return new Team(List.of(player1, player2));
+    }
 
-        return new Team(List.of(player1.get(), player2.get()));
+    private Player getPlayer(Long playerId) {
+        return playerService.findById(playerId)
+                .orElseThrow(() -> new ValidationException("player does not exist"));
     }
 
     public TeamTO mapsToTO(Team team) {

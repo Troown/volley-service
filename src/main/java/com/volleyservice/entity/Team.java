@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Data
 @Entity
+@Table(name = "TEAM")
 public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
     @OneToMany
-
     private List<Player> players;
     private String teamName;
     private int rankingPoints;

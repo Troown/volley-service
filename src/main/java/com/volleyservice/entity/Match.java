@@ -20,14 +20,6 @@ public class Match {
     private List<MatchSet> sets;
     private String referee;
 
-    public Match(List<Team> teams) {
-        this.teams = teams;
-
-        MatchSet set1 = new MatchSet(21, Map.of(teams.get(0), 0, teams.get(1), 0));
-        MatchSet set2 = new MatchSet(21, Map.of(teams.get(0), 0, teams.get(1), 0));
-        MatchSet set3 = new MatchSet(15, Map.of(teams.get(0), 0, teams.get(1), 0));
-        this.sets = List.of(set1, set2, set3);
-    }
 
     public Match(List<Team> teams, List<MatchSet> sets) {
         this.teams = teams;

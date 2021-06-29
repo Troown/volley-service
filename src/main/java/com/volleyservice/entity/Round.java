@@ -16,7 +16,7 @@ public class Round {
     public Round(Phase phase, List<List<Team>> teams) {
         this.phase = phase;
         for (List<Team> teamPAir : teams ) {
-            this.matches.add(new Match(teamPAir));
+            this.matches.add(new Match());
         }
     }
 }

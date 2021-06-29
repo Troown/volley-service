@@ -2,11 +2,12 @@ package com.volleyservice.service;
 
 import com.volleyservice.entity.Team;
 import com.volleyservice.entity.TeamRepository;
+import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Data
 @Service
 public class TeamService {
     private final TeamRepository repository;
@@ -25,5 +26,7 @@ public class TeamService {
 
     public Optional<Team> findById(long id) {
         return repository.findById(id);
+
     }
+
 }

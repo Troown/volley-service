@@ -1,8 +1,10 @@
 package com.volleyservice;
 
 import com.volleyservice.entity.PlayerRepository;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -24,6 +27,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -87,14 +91,21 @@ public class PlayerControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON).content(dl.postWithNull())).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
+    @Disabled
     @Test
     public void addPlayerAndUpdateHisDateOfBirthAndRankingPointsUsingPatchMethod() throws Exception {
         DatabaseLoader dl = new DatabaseLoader();
 
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/players").contentType(MediaType.APPLICATION_JSON)
+        MvcResult result = this.mockMvc.perform(MockMvcRequestBuilders.post("/players").contentType(MediaType.APPLICATION_JSON)
                 .content(dl.postRequestBody())).andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json"))
-                .andExpect(MockMvcResultMatchers.content().json(dl.postResponseBody()));
+                .andReturn();
+
+        var content = result.getResponse().getContentAsString();
+        JSONObject jsonResponse = new JSONObject(content);
+
+        assertThat(jsonResponse.get("name")).isEqualTo("Mateusz");
+
 
         this.mockMvc.perform(MockMvcRequestBuilders.patch("/players/1")
                 .contentType("application/json-patch+json").content("[\n" +

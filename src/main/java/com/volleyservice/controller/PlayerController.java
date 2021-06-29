@@ -90,6 +90,12 @@ public class PlayerController {
         }
 
     }
+    @DeleteMapping("players/{id}")
+    public void delete(@PathVariable Long id) {
+        playerService.delete(id);
+    }
+
+
     private Player applyPatchToPlayer(JsonPatch patch, Player targetPlayer)
             throws JsonPatchException, JsonProcessingException {
         JsonNode patched = patch.apply(objectMapper.convertValue(targetPlayer, JsonNode.class));

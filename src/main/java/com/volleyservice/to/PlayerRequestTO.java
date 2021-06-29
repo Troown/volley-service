@@ -8,11 +8,12 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Data
 public class PlayerRequestTO {
     String name;
     String surname;
+    @NotNull
     LocalDate dateOfBirth;
+
 }

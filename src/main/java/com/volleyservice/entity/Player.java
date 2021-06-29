@@ -1,16 +1,16 @@
 package com.volleyservice.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
+@Table(name = "PLAYER")
 public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -19,6 +19,7 @@ public class Player {
     private String surname;
     private LocalDate dateOfBirth;
     private Integer rankingPoints;
+
 
     public Player(String name, String surname) {
         this.name = name;

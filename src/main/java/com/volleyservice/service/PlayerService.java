@@ -7,6 +7,7 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import com.volleyservice.entity.Player;
 import com.volleyservice.entity.PlayerRepository;
 import com.volleyservice.mapper.PlayerMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,13 +17,11 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PlayerService {
     private final PlayerRepository repository;
-    private final PlayerMapper playerMapper = new PlayerMapper();
 
-    public PlayerService(PlayerRepository repository) {
-        this.repository = repository;
-    }
+    private final PlayerMapper playerMapper;
 
     public List<Player> findAll () {
         return (List<Player>) repository.findAll();
@@ -30,6 +29,10 @@ public class PlayerService {
 
     public Player save(Player player) {
         return repository.save(player);
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 
     public Optional<Player> findById(long id) {
