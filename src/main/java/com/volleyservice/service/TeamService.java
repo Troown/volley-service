@@ -1,7 +1,7 @@
 package com.volleyservice.service;
 
 import com.volleyservice.entity.Team;
-import com.volleyservice.entity.TeamRepository;
+import com.volleyservice.repository.TeamRepository;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 

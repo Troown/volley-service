@@ -1,6 +1,6 @@
 package com.volleyservice.controller;
 
-import com.volleyservice.entity.PlayerRepository;
+import com.volleyservice.repository.PlayerRepository;
 import com.volleyservice.entity.Team;
 import com.volleyservice.mapper.TeamMapper;
 import com.volleyservice.service.TeamService;

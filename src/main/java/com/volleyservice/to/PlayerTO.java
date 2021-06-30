@@ -9,7 +9,6 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-
 public class PlayerTO {
     String name;
     String surname;

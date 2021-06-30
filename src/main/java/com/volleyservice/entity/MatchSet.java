@@ -3,13 +3,16 @@ package com.volleyservice.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+
 
 @NoArgsConstructor
 @Data
-@AllArgsConstructor
 @Entity
 public class MatchSet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,21 +20,11 @@ public class MatchSet {
     Long id;
 
     private int setNumber;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private SetResult setResult;
-//    private Map<Player, List<Cards>> playerToCards;
 
-
-    public Optional<Team> getWinnerOfSet() {
-        return Optional.empty();
+    public MatchSet(int setNumber, List<Team> teams) {
+        this.setNumber = setNumber;
+        this.setResult = new SetResult(teams);
     }
-
-    public Optional<Team> getLoserOfSet() {
-        return Optional.empty();
-    }
-
-//    public boolean isTwoPointsDeference() {
-//        return this.teamToPointsMap.values().stream().
-//                reduce((subtotal, element) -> subtotal - element).map(Math::abs).orElse(0) >= 2;
-//    }
 }

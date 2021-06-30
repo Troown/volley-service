@@ -1,6 +1,6 @@
 package com.volleyservice;
 
-import com.volleyservice.entity.PlayerRepository;
+import com.volleyservice.repository.PlayerRepository;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,21 +8,16 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockServletContext;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
@@ -30,8 +25,6 @@ import javax.servlet.ServletContext;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import static org.hamcrest.Matchers.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {VolleyServiceApplication.class})

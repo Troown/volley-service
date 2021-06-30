@@ -21,6 +21,7 @@ public class Team {
     @Id
     private Long id;
     @OneToMany
+    @ToStringExclude
     private List<Player> players;
     private String teamName;
     private int rankingPoints;

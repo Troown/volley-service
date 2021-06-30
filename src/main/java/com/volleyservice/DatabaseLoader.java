@@ -2,31 +2,29 @@ package com.volleyservice;
 
 
 import com.volleyservice.entity.Player;
-import com.volleyservice.entity.PlayerRepository;
+import com.volleyservice.repository.PlayerRepository;
+import com.volleyservice.repository.TeamRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
 @Component
 public class DatabaseLoader {
     @Bean
-    CommandLineRunner init(PlayerRepository repository) {
-
+    CommandLineRunner init(PlayerRepository playerRepo, TeamRepository teamRepo) {
         return args -> {
-            repository.saveAll(List.of(
+            playerRepo.saveAll(List.of(
                     new Player("Kuba", "Zdybek"),
                     new Player("Daniel", "Pliński"),
-                    new Player("Dominik", "Witczak")));
+                    new Player("Dominik", "Witczak"),
+                    new Player("Mateusz", "Kańczok")));
         };
-
     }
+
     public String getMethodResponse() {
         return "{\n" +
                 "  \"_embedded\": {\n" +

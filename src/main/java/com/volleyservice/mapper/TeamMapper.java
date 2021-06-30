@@ -1,19 +1,17 @@
 package com.volleyservice.mapper;
 
 import com.volleyservice.entity.Player;
-import com.volleyservice.entity.PlayerRepository;
+import com.volleyservice.repository.PlayerRepository;
 import com.volleyservice.entity.Team;
 import com.volleyservice.exception.ValidationException;
 import com.volleyservice.service.PlayerService;
 import com.volleyservice.service.TeamService;
 import com.volleyservice.to.TeamRequestTO;
 import com.volleyservice.to.TeamTO;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
