@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -19,18 +20,16 @@ import java.util.stream.Collectors;
 public class TeamMapper {
     private final TeamService teamService;
     private final PlayerService playerService;
+    private final PlayerRepository playerRepository;
 
 
-    public Team mapsToEntity(PlayerRepository repository, TeamRequestTO teamRequestTO) {
+    public Team mapsToEntity(TeamRequestTO teamRequestTO) {
 
-        Player player1 = getPlayer(teamRequestTO.getPlayerNumberOneId());
-        Player player2 = getPlayer(teamRequestTO.getPlayerNumberTwoId());
+        Player player1 = playerRepository.findById(teamRequestTO.getPlayerNumberOneId())
+                .orElseThrow(()->new NoSuchElementException("there is no such player"));
+        Player player2 = playerRepository.findById(teamRequestTO.getPlayerNumberTwoId())
+                .orElseThrow(()->new NoSuchElementException("there is no such player"));
         return new Team(List.of(player1, player2));
-    }
-
-    private Player getPlayer(Long playerId) {
-        return playerService.findById(playerId)
-                .orElseThrow(() -> new ValidationException("player does not exist"));
     }
 
     public TeamTO mapsToTO(Team team) {

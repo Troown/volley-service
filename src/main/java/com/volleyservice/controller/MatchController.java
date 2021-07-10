@@ -62,28 +62,4 @@ public class MatchController {
                 orElse(ResponseEntity.notFound().build());
     }
 
-
-//    @PatchMapping(path = "/players/{id}", consumes = "application/json-patch+json")
-//    public ResponseEntity<Player> updatePlayer(@PathVariable long id, @RequestBody JsonPatch patch) {
-//        Player player = playerService.findById(id).orElseThrow(IllegalArgumentException::new);
-//        try {
-//            Player playerPatched = applyPatchToPlayer(patch, player);
-//            playerService.save(playerPatched);
-//            return ResponseEntity.ok(playerPatched);
-//
-//        } catch (JsonPatchException jsonPatchException) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        } catch (JsonProcessingException jsonProcessingException) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//        }
-//
-//    }
-//
-//
-//    private Player applyPatchToPlayer(JsonPatch patch, Player targetPlayer)
-//            throws JsonPatchException, JsonProcessingException {
-//        JsonNode patched = patch.apply(objectMapper.convertValue(targetPlayer, JsonNode.class));
-//        return objectMapper.treeToValue(patched, Player.class);
-//    }
-
 }

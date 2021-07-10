@@ -4,19 +4,26 @@ import com.volleyservice.enums.Phase;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
+@Entity
 public class Round {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    private Long id;
 
-    private Phase phase;
+    private Integer roundNumber;
+
+    @OneToMany(cascade = {CascadeType.ALL})
     private List<Match> matches;
 
-    public Round(Phase phase, List<List<Team>> teams) {
-        this.phase = phase;
-        for (List<Team> teamPAir : teams ) {
-            this.matches.add(new Match());
-        }
+    private Phase phase;
+
+    public Round(Integer roundNumber, List<Match> matches) {
+        this.roundNumber = roundNumber;
+        this.matches = matches;
     }
 }

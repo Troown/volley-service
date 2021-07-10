@@ -21,7 +21,6 @@ public class Team {
     @Id
     private Long id;
     @OneToMany
-    @ToStringExclude
     private List<Player> players;
     private String teamName;
     private int rankingPoints;
@@ -46,6 +45,5 @@ public class Team {
     private Integer evaluateRankingPoints(List<Player> players) {
         return players.stream().mapToInt(Player::getRankingPoints).sum();
     }
-
 
 }

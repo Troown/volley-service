@@ -12,6 +12,7 @@ import com.volleyservice.service.PlayerService;
 import com.volleyservice.to.PlayerRequestTO;
 import com.volleyservice.to.PlayerTO;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -29,7 +30,7 @@ import java.util.stream.StreamSupport;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 public class PlayerController {
 

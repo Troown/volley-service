@@ -34,6 +34,13 @@ public class Player {
         this.dateOfBirth = dateOfBirth;
         this.rankingPoints = 0;
     }
+
+    public Player(String name, String surname, Integer rankingPoints) {
+        this.name = name;
+        this.surname = surname;
+        this.dateOfBirth = LocalDate.parse("1900-01-01");
+        this.rankingPoints = rankingPoints;
+    }
 }
 
 
