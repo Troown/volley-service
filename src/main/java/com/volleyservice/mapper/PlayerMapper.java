@@ -17,7 +17,7 @@ public class PlayerMapper {
     }
 
     public PlayerTO mapsToTO (Player player) {
-        return new PlayerTO(player.getName(), player.getSurname(), player.getRankingPoints(),
+        return new PlayerTO(player.getId(), player.getName(), player.getSurname(), player.getRankingPoints(),
                 isAdult(player.getDateOfBirth()));
     }
 

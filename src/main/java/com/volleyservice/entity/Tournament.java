@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
@@ -18,7 +19,7 @@ public class Tournament {
     @Id
     private Long id;
 
-    @OneToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.ALL})
     private List<Team> registeredTeams;
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Round> rounds;
@@ -27,6 +28,7 @@ public class Tournament {
     private String city;
 
     public Tournament(String tournamentName) {
+        this.registeredTeams = new ArrayList<>();
         this.tournamentName = tournamentName;
     }
 

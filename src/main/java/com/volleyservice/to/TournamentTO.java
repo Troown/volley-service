@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class TournamentTO {
+    private Long id;
     private String tournamentName;
-    private List<Team> teams;
+    private List<TeamTO> teams;
 }

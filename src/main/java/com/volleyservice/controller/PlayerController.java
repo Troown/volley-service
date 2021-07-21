@@ -56,7 +56,8 @@ public class PlayerController {
         Player savedPlayer = playerService.save(playerMapper.mapsToEntity(playerRequestTO));
 
         EntityModel<PlayerTO> playerResource = EntityModel.of(playerMapper.mapsToTO(savedPlayer), //
-                linkTo(methodOn(PlayerController.class).findOne(savedPlayer.getId())).withSelfRel());
+                linkTo(methodOn(PlayerController.class).findOne(savedPlayer.getId())).withSelfRel(),
+                linkTo(methodOn(PlayerController.class).findAll()).withRel("players"));
         try {
             return ResponseEntity //
                     .created(new URI(playerResource.getRequiredLink(IanaLinkRelations.SELF).getHref())) //

@@ -20,7 +20,7 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    @OneToMany
+    @ManyToMany
     private List<Player> players;
     private String teamName;
     private int rankingPoints;

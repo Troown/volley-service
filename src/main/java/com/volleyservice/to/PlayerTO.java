@@ -10,6 +10,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Data
 public class PlayerTO {
+    Long id;
     String name;
     String surname;
     Integer rankingPoints;

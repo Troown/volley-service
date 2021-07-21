@@ -1,12 +1,11 @@
 package com.volleyservice.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Optional;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity

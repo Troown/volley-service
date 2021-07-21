@@ -6,6 +6,7 @@ import com.volleyservice.entity.Round;
 import com.volleyservice.entity.Team;
 import com.volleyservice.entity.Tournament;
 import com.volleyservice.repository.*;
+import com.volleyservice.service.TournamentService;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +25,8 @@ public class DatabaseLoader {
                            TeamRepository teamRepo,
                            TournamentRepository tournamentRepo,
                            RoundRepository roundRepo,
-                           MatchRepository matchRepo) {
+                           MatchRepository matchRepo,
+                           TournamentService tournamentService) {
         return args -> {
             playerRepo.saveAll(List.of(
                     new Player("Jędrzej", "Brożyniak", 670),
@@ -103,14 +105,10 @@ public class DatabaseLoader {
             List<Team> teams = (List<Team>) teamRepo.findAll();
 
             Tournament updatingTournament = tournamentRepo.findById(1L).get();
+
             updatingTournament.setRegisteredTeams(teams);
 
             tournamentRepo.save(updatingTournament);
-
-            teamRepo.save(new Team(List.of(playerRepo.findById(55L).get(), playerRepo.findById(56L).get())));
-
-
-
 
         };
     }
