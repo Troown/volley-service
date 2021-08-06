@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Data
 public class MatchTO {
-    private String teamOneName;
-    private String teamTwoName;
-    private List<List<Integer>> results;
+    private Integer matchNumber;
+    private Map<String, Long> teamToSets;
+
 
 }

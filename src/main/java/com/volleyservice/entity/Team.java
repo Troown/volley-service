@@ -3,12 +3,9 @@ package com.volleyservice.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.apache.commons.lang3.builder.ToStringExclude;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -27,7 +24,7 @@ public class Team {
     
     public Team(List<Player> players ) {
         this.players = players;
-        this.teamName = createDefaultName(players);
+        this.teamName = getDefaultName(players);
         this.rankingPoints = evaluateRankingPoints(players);
     }
 
@@ -37,7 +34,7 @@ public class Team {
         this.rankingPoints = evaluateRankingPoints(players);
     }
 
-    private String createDefaultName(List<Player> players) {
+    private String getDefaultName(List<Player> players) {
         List<String> surnames = players.stream().map(Player::getSurname).collect(Collectors.toList());
         return surnames.get(0)+ "/" + surnames.get(1);
     }

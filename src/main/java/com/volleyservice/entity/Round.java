@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,13 +18,26 @@ public class Round {
 
     private Integer roundNumber;
 
+    private Phase phase;
+
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Match> matches;
 
-    private Phase phase;
+
+
+    public Round(Integer roundNumber) {
+        this.roundNumber = roundNumber;
+        this.matches = new ArrayList<>();
+    }
 
     public Round(Integer roundNumber, List<Match> matches) {
         this.roundNumber = roundNumber;
+        this.matches = matches;
+    }
+
+    public Round(Integer roundNumber, Phase phase, List<Match> matches) {
+        this.roundNumber = roundNumber;
+        this.phase = phase;
         this.matches = matches;
     }
 }

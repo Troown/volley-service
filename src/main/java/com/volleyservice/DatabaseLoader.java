@@ -2,7 +2,6 @@ package com.volleyservice;
 
 
 import com.volleyservice.entity.Player;
-import com.volleyservice.entity.Round;
 import com.volleyservice.entity.Team;
 import com.volleyservice.entity.Tournament;
 import com.volleyservice.repository.*;
@@ -12,10 +11,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Component
@@ -109,6 +105,7 @@ public class DatabaseLoader {
             updatingTournament.setRegisteredTeams(teams);
 
             tournamentRepo.save(updatingTournament);
+
 
         };
     }

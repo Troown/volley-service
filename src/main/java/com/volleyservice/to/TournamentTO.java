@@ -11,5 +11,6 @@ import java.util.List;
 public class TournamentTO {
     private Long id;
     private String tournamentName;
+    private String city;
     private List<TeamTO> teams;
 }

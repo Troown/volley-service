@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @NoArgsConstructor
@@ -14,7 +15,9 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
+    @NotBlank
     private String name;
+    @NotBlank
     private String surname;
     private LocalDate dateOfBirth;
     private Integer rankingPoints;

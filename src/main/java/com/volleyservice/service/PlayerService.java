@@ -14,7 +14,7 @@ import java.util.Optional;
 public class PlayerService {
     private final PlayerRepository repository;
 
-    public List<Player> findAll () {
+    public List<Player> findAll() {
         return (List<Player>) repository.findAll();
     }
 

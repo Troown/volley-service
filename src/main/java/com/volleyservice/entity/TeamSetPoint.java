@@ -10,14 +10,14 @@ import javax.persistence.*;
 public class TeamSetPoint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    Long id;
+    private Long id;
     @OneToOne(cascade = {CascadeType.ALL})
     private Team team;
     private Integer points;
 
-    public TeamSetPoint(Team team) {
-        this.team = team;
-        this.points = 0;
-    }
 
+    public TeamSetPoint(Team team, Integer points) {
+        this.team = team;
+        this.points = points;
+    }
 }

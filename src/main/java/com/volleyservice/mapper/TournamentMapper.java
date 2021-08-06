@@ -21,12 +21,17 @@ public class TournamentMapper {
     private final TeamMapper teamMapper;
 
     public Tournament mapsTournamentRequestTOToEntity(TournamentRequestTO tournamentRequestTO) {
-        return new Tournament(tournamentRequestTO.getTournamentName());
+        return new Tournament(
+                tournamentRequestTO.getTournamentName(),
+                tournamentRequestTO.getCity());
     }
 
     public TournamentTO mapsToTO(Tournament tournament) {
 
-        return new TournamentTO(tournament.getId(), tournament.getTournamentName(),
+        return new TournamentTO(
+                tournament.getId(),
+                tournament.getTournamentName(),
+                tournament.getCity(),
                 tournament.getRegisteredTeams()
                         .stream().map(teamMapper::mapsToTO).collect(Collectors.toList()));
     }

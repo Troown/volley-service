@@ -5,6 +5,8 @@ import com.volleyservice.entity.Match;
 import com.volleyservice.entity.Player;
 import com.volleyservice.entity.Team;
 import com.volleyservice.entity.Tournament;
+import com.volleyservice.exception.NotFoundException;
+import com.volleyservice.exception.ValidationException;
 import com.volleyservice.mapper.MatchMapper;
 import com.volleyservice.repository.TeamRepository;
 import com.volleyservice.repository.TournamentRepository;
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,7 +28,6 @@ import java.util.stream.DoubleStream;
 public class TournamentService {
 
     private final TournamentRepository tournamentRepository;
-    private final TeamRepository teamRepository;
 
     public Tournament save(Tournament tournament) {
         return tournamentRepository.save(tournament);
@@ -41,7 +43,7 @@ public class TournamentService {
 
     public List<Team> findAllTeamsInTournament(long tournamentId) {
         return tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new NoSuchElementException("no such tournament"))
+                .orElseThrow(() -> new NotFoundException("Tournament does not exist"))
                 .getRegisteredTeams();
     }
 
@@ -55,13 +57,12 @@ public class TournamentService {
     public Tournament saveTeamIntoTournament(long tournamentId, Team teamToRegister) {
 
         Tournament tournament = tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new NoSuchElementException("no such tournament"));
+                .orElseThrow(() -> new NotFoundException("Tournament does not exist"));
 
-        List<Team> teams = tournament.getRegisteredTeams();
-        teams.add(teamToRegister);
-        tournament.setRegisteredTeams(teams);
+        tournament.getRegisteredTeams().add(teamToRegister);
 
         return tournamentRepository.save(tournament);
+
     }
 
 }

@@ -13,7 +13,6 @@ import java.time.LocalDate;
 public class PlayerRequestTO {
     String name;
     String surname;
-    @NotNull
     LocalDate dateOfBirth;
 
 }

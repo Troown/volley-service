@@ -8,23 +8,31 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
 @NoArgsConstructor
 @Data
-@Entity
+@Entity(name = "SET")
 public class MatchSet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     Long id;
 
     private int setNumber;
+
     @OneToOne(cascade = {CascadeType.ALL})
     private SetResult setResult;
 
-    public MatchSet(int setNumber, List<Team> teams) {
+
+    public MatchSet(int setNumber, SetResult setResult) {
         this.setNumber = setNumber;
-        this.setResult = new SetResult(teams);
+        this.setResult = setResult;
+    }
+
+    public List<Team> getTeams() {
+        return List.of(this.setResult.getFirstTeamSetResult().getTeam(),
+                this.setResult.getSecondTeamSetResult().getTeam());
     }
 }

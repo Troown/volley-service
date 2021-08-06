@@ -1,6 +1,7 @@
 package com.volleyservice.mapper;
 
 import com.volleyservice.entity.Player;
+import com.volleyservice.exception.NotFoundException;
 import com.volleyservice.repository.PlayerRepository;
 import com.volleyservice.entity.Team;
 import com.volleyservice.exception.ValidationException;
@@ -23,24 +24,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class TeamMapper {
-    private final TeamService teamService;
-    private final PlayerService playerService;
-    private final TeamRepository teamRepository;
     private final PlayerRepository playerRepository;
-    private final TournamentRepository tournamentRepository;
     private final PlayerMapper playerMapper;
 
 
     public Team mapsToEntity(TeamRequestTO teamRequestTO) {
 
-        Player player1 = playerRepository.findById(teamRequestTO.getPlayerNumberOneId())
-                .orElseThrow(() -> new NoSuchElementException("there is no such player"));
-        Player player2 = playerRepository.findById(teamRequestTO.getPlayerNumberTwoId())
-                .orElseThrow(() -> new NoSuchElementException("there is no such player"));
-
-        List<Player> players = List.of(player1, player2);
-
-        return new Team(List.of(player1, player2));
+        return new Team(teamRequestTO.getIds().stream()
+                .map(id -> playerRepository.findById(id)
+                        .orElseThrow(() -> new NotFoundException("Player was not found for parameter {id:" + id + "}")))
+                .collect(Collectors.toList()));
     }
 
     public TeamTO mapsToTO(@NotNull Team team) {
