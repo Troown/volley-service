@@ -25,7 +25,7 @@ public class RoundService {
 
     public Tournament createAllRounds(long id) {
         Tournament updateTournament = tournamentRepository.findById(id)
-                .orElseThrow(()-> new NotFoundException("Tournament does not exist"));
+                .orElseThrow(NotFoundException::withTournamentNotFound);
 
         updateTournament
                 .setRounds(getRoundsFromSchema(doubleElimination.matchesToRoundsRelationsDefiner(16)));
@@ -37,7 +37,7 @@ public class RoundService {
 
     public List<Round> findAlInTournament(long tournamentId) {
         return tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new NotFoundException("Tournament does not exist"))
+                .orElseThrow(NotFoundException::withTournamentNotFound)
                 .getRounds();
     }
 
