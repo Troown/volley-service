@@ -13,6 +13,4 @@ import java.util.Optional;
 public class MatchTO {
     private Integer matchNumber;
     private Map<String, Long> teamToSets;
-
-
 }
