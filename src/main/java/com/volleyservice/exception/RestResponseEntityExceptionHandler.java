@@ -27,11 +27,11 @@ public class RestResponseEntityExceptionHandler
                 new HttpHeaders(), HttpStatus.NOT_FOUND, webRequest);
     }
 
-    @ExceptionHandler({ConstraintViolationException.class})
+    @ExceptionHandler(ValidationException.class)
     protected ResponseEntity<Object> handleNotValidInputInRequestBody(
             RuntimeException ex, WebRequest webRequest//, HttpServletRequest httpServletRequest, WebRequest webRequest
     ) {
-        return handleExceptionInternal(ex, "chycił go",
+        return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
     }
 }

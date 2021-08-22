@@ -19,6 +19,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -27,33 +29,23 @@ public class MatchService {
 
     public List<Match> findAlInTournament(long tournamentId) {
         return tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new NotFoundException("Tournament does not exist"))
-                .getRounds().stream().map(Round::getMatches).collect(Collectors.toList())
-                .stream().collect(ArrayList::new, List::addAll, List::addAll);
+                .orElseThrow(NotFoundException::withTournamentNotFound)
+                .getRounds().stream().map(Round::getMatches).flatMap(List::stream).collect(toList());
     }
 
-    public Optional<Match> setResult(long tourId, Integer matchNum, List<MatchSet> sets) {
-        Match matchToUpdate = tournamentRepository.findById(tourId)
-                .orElseThrow(() -> new NotFoundException("Tournament does not exist"))
-                .findMatchByNumber(matchNum)
-                .orElseThrow(()->
-                        new NotFoundException("Match " + matchNum + " does not exist in tournament with id=" + tourId));
-
-        validateTeamsInSets(matchToUpdate, sets);
+    public Match saveResult(long tourId, Integer matchNum, List<MatchSet> sets) {
+        Match matchToUpdate = findByMatchNumber(tourId, matchNum);
 
         matchToUpdate.setSets(sets);
 
-        return Optional.of(matchToUpdate);
+        return matchToUpdate;
     }
 
-    private boolean validateTeamsInSets(Match match, List<MatchSet> sets) {
-
-        return sets.stream().allMatch(set -> set.getTeams().containsAll(match.getTeams()));
-    }
-
-    public Optional<Match> findByMatchNumber(long tournamentId, Integer matchNumber) {
+    public Match findByMatchNumber(long tournamentId, Integer matchNumber) {
         return tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new NotFoundException("Tournament does not exist for id = " + tournamentId))
-                .findMatchByNumber(matchNumber);
+                .orElseThrow(NotFoundException::withTournamentNotFound)
+                .findMatchByNumber(matchNumber)
+                .orElseThrow(NotFoundException::withMatchNotFound);
     }
+
 }

@@ -1,7 +1,5 @@
 package com.volleyservice.entity;
 
-import jdk.jshell.EvalException;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,11 +10,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Data
-@AllArgsConstructor
 @Entity
 @NoArgsConstructor
 public class Match {
-    //TODO UUId
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -34,7 +30,6 @@ public class Match {
     @OneToMany(cascade = {CascadeType.ALL})
     private List<MatchSet> sets;
 
-
     public Match(int matchNumber) {
         this.matchNumber = matchNumber;
         this.teams = new ArrayList<>();
@@ -48,32 +43,24 @@ public class Match {
     }
 
     public Optional<Team> getWinner() {
-        var result = this.sets.stream()
-                .map(matchSet -> matchSet.getSetResult().getWinnerOfSet())
-                .collect(Collectors.toList())
-                .stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+        return this.sets.stream()
+                .map(matchSet -> matchSet.getSetResult().getWinnerOfSet()).flatMap(Optional::stream)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .entrySet()
                 .stream()
-                .max(Map.Entry.comparingByValue());
-
-        if (result.isPresent() && result.get().getValue() == 2) {
-            return result.get().getKey();
-
-        } else return Optional.empty();
-
+                .max(Map.Entry.comparingByValue())
+                .filter(entry -> entry.getValue() == 2)
+                .map(Map.Entry::getKey);
     }
 
     public Optional<Team> getLoser() {
-        var result = this.sets.stream()
-                .map(matchSet -> matchSet.getSetResult().getLoserOfSet())
-                .collect(Collectors.toList())
-                .stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+        return this.sets.stream()
+                .map(matchSet -> matchSet.getSetResult().getLoserOfSet()).flatMap(Optional::stream)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .entrySet()
                 .stream()
-                .max(Map.Entry.comparingByValue());
-        if (result.isPresent() && result.get().getValue() == 2) {
-            return result.get().getKey();
-
-        } else return Optional.empty();
+                .max(Map.Entry.comparingByValue())
+                .filter(entry -> entry.getValue() == 2)
+                .map(Map.Entry::getKey);
     }
 }

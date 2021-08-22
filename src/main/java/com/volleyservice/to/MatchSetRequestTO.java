@@ -14,6 +14,4 @@ public class MatchSetRequestTO {
     private Integer firstTeamPoints;
     private long secondTeamId;
     private Integer secondTeamPoints;
-
-
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,12 +24,12 @@ public class RoundService {
     private final TournamentRepository tournamentRepository;
     private final DoubleElimination doubleElimination;
 
-    public Tournament createAllRounds(long id) {
+    public Tournament createAllRounds(long id, Integer numberOfTeam) {
         Tournament updateTournament = tournamentRepository.findById(id)
-                .orElseThrow(()-> new NotFoundException("Tournament does not exist"));
+                .orElseThrow(NotFoundException::withTournamentNotFound);
 
         updateTournament
-                .setRounds(getRoundsFromSchema(doubleElimination.matchesToRoundsRelationsDefiner(16)));
+                .setRounds(getRoundsFromSchema(doubleElimination.matchesToRoundsRelationsDefiner()));
 
         updateTournament.setTeamsInFirstRound();
 
@@ -37,8 +38,9 @@ public class RoundService {
 
     public List<Round> findAlInTournament(long tournamentId) {
         return tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new NotFoundException("Tournament does not exist"))
+                .orElseThrow(NotFoundException::withTournamentNotFound)
                 .getRounds();
+//TODO shouldReturnAllRoundsFromRepo, shouldThrowException
     }
 
     private List<Round> getRoundsFromSchema(List<MatchesToRoundsRelations> matchesToRoundsRelations) {
@@ -49,6 +51,11 @@ public class RoundService {
                         rel.getMatchNumbers().stream().map(Match::new).collect(Collectors.toList()))
         ).collect(Collectors.toList());
     }
-
-
+//TODO Test shouldReturnPhase ShouldNotReturnPhase, ShouldThrowException
+    public Round findByPhase(long tournamentId, Phase phase) {
+        return tournamentRepository.findById(tournamentId)
+                .orElseThrow(NotFoundException::withTournamentNotFound)
+                .getRounds().stream().filter(round -> round.getPhase() == phase).findAny()
+                .orElseThrow(NotFoundException::withRoundNotFound);
+    }
 }

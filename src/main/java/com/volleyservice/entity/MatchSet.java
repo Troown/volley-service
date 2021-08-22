@@ -31,8 +31,4 @@ public class MatchSet {
         this.setResult = setResult;
     }
 
-    public List<Team> getTeams() {
-        return List.of(this.setResult.getFirstTeamSetResult().getTeam(),
-                this.setResult.getSecondTeamSetResult().getTeam());
-    }
 }

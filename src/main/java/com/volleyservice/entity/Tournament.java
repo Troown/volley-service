@@ -8,6 +8,8 @@ import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.*;
+
 @NoArgsConstructor
 @Data
 @Entity
@@ -29,10 +31,12 @@ public class Tournament {
     public Tournament(String tournamentName) {
         this.registeredTeams = new ArrayList<>();
         this.tournamentName = tournamentName;
+        this.rounds = new ArrayList<>();
     }
 
     public Tournament(String tournamentName, String city) {
         this.registeredTeams = new ArrayList<>();
+        this.rounds = new ArrayList<>();
         this.tournamentName = tournamentName;
         this.city = city;
     }
@@ -56,8 +60,6 @@ public class Tournament {
         return this.rounds.stream()
                 .map(Round::getMatches)
                 .flatMap(Collection::stream)
-                .collect(Collectors.toList())
-                .stream()
                 .filter(match -> match.getMatchNumber() == matchNumber).findAny();
     }
 }

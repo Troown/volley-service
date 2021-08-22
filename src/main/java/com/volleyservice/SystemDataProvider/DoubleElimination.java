@@ -13,10 +13,10 @@ import java.util.stream.IntStream;
 @Data
 public class DoubleElimination {
 
-    private final List<MatchesToRoundsRelations> matchesToRoundsRelations = matchesToRoundsRelationsDefiner(16);
+    private final List<MatchesToRoundsRelations> matchesToRoundsRelations = matchesToRoundsRelationsDefiner();
     private List<MatchesRelations> matchesRelations = matchesRelationsGraphDefiner();
 
-    public List<MatchesToRoundsRelations> matchesToRoundsRelationsDefiner(Integer numberOfTeams) {
+    public List<MatchesToRoundsRelations> matchesToRoundsRelationsDefiner() {
         return List.of(
                 new MatchesToRoundsRelations(1, Phase.FIRST_ROUND, IntStream.rangeClosed(1, 8).boxed().collect(Collectors.toList())),
                 new MatchesToRoundsRelations(2, Phase.SECOND_ROUND, IntStream.rangeClosed(9, 12).boxed().collect(Collectors.toList())),

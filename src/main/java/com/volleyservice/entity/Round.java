@@ -23,18 +23,6 @@ public class Round {
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Match> matches;
 
-
-
-    public Round(Integer roundNumber) {
-        this.roundNumber = roundNumber;
-        this.matches = new ArrayList<>();
-    }
-
-    public Round(Integer roundNumber, List<Match> matches) {
-        this.roundNumber = roundNumber;
-        this.matches = matches;
-    }
-
     public Round(Integer roundNumber, Phase phase, List<Match> matches) {
         this.roundNumber = roundNumber;
         this.phase = phase;

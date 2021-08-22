@@ -15,10 +15,13 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
+
     @NotBlank
     private String name;
+
     @NotBlank
     private String surname;
+
     private LocalDate dateOfBirth;
     private Integer rankingPoints;
 

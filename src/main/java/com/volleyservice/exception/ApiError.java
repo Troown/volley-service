@@ -14,12 +14,12 @@ public class ApiError {
 
     private HttpStatus status;
 
-    String message;
+    private String message;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
 
-    String path;
+    private String path;
 
     public ApiError(HttpStatus status, String message, String path) {
         super();

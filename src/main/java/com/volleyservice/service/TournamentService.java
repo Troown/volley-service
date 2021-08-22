@@ -16,6 +16,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.transaction.Transactional;
 import java.net.URISyntaxException;
@@ -33,8 +34,8 @@ public class TournamentService {
         return tournamentRepository.save(tournament);
     }
 
-    public Optional<Tournament> findById(long id) {
-        return tournamentRepository.findById(id);
+    public Tournament findById(long id) {
+        return tournamentRepository.findById(id).orElseThrow(NotFoundException::withTournamentNotFound);
     }
 
     public List<Tournament> findAll() {
@@ -43,15 +44,15 @@ public class TournamentService {
 
     public List<Team> findAllTeamsInTournament(long tournamentId) {
         return tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new NotFoundException("Tournament does not exist"))
+                .orElseThrow(NotFoundException::withTournamentNotFound)
                 .getRegisteredTeams();
     }
 
-    public Optional<Team> findOneTeamInTournamentById(long tournamentId, long teamId) {
+    public Team findOneTeamInTournamentById(long tournamentId, long teamId) {
         return tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new NoSuchElementException("no such tournament"))
+                .orElseThrow(NotFoundException::withTournamentNotFound)
                 .getRegisteredTeams().stream().filter(team -> team.getId() == teamId)
-                .findAny();
+                .findAny().orElseThrow(NotFoundException::withMatchNotFound);
     }
 
     public Tournament saveTeamIntoTournament(long tournamentId, Team teamToRegister) {
@@ -59,10 +60,14 @@ public class TournamentService {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new NotFoundException("Tournament does not exist"));
 
+        //TODO here should be team validated
+
         tournament.getRegisteredTeams().add(teamToRegister);
 
         return tournamentRepository.save(tournament);
-
     }
+
+
+
 
 }

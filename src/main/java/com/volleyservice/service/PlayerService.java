@@ -1,6 +1,7 @@
 package com.volleyservice.service;
 
 import com.volleyservice.entity.Player;
+import com.volleyservice.exception.NotFoundException;
 import com.volleyservice.repository.PlayerRepository;
 import com.volleyservice.mapper.PlayerMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,8 @@ public class PlayerService {
         repository.deleteById(id);
     }
 
-    public Optional<Player> findById(long id) {
-        return repository.findById(id);
+    public Player findById(long id) {
+        return repository.findById(id).orElseThrow(NotFoundException::withPlayerNotFound);
     }
 
 }

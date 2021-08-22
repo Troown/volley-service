@@ -20,7 +20,7 @@ public class TournamentMapper {
 
     private final TeamMapper teamMapper;
 
-    public Tournament mapsTournamentRequestTOToEntity(TournamentRequestTO tournamentRequestTO) {
+    public Tournament mapsToEntity(TournamentRequestTO tournamentRequestTO) {
         return new Tournament(
                 tournamentRequestTO.getTournamentName(),
                 tournamentRequestTO.getCity());

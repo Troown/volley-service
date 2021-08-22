@@ -31,10 +31,7 @@ public class MatchSetMapper {
                 new SetResult(
                         new TeamSetPoint(team1, matchSetRequestTO.getFirstTeamPoints()),
                         new TeamSetPoint(team2, matchSetRequestTO.getSecondTeamPoints())
-                )
-        );
-
-
+                ));
     }
 
     private Team findTeamByIdOrThrowNotFound(long id) {

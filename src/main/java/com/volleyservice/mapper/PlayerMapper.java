@@ -17,11 +17,17 @@ public class PlayerMapper {
     }
 
     public PlayerTO mapsToTO (Player player) {
-        return new PlayerTO(player.getId(), player.getName(), player.getSurname(), player.getRankingPoints(),
-                isAdult(player.getDateOfBirth()));
+
+        return PlayerTO.builder()
+                .id(player.getId())
+                .name(player.getName())
+                .surname(player.getSurname())
+                .rankingPoints(player.getRankingPoints())
+                .isAdult(isAdult(player.getDateOfBirth()))
+                .build();
     }
 
-    private boolean isAdult(LocalDate dateOfBirth) {
+    public boolean isAdult(LocalDate dateOfBirth) {
         return (Period.between(dateOfBirth, LocalDate.now()).getYears()) >= 18;
     }
 }

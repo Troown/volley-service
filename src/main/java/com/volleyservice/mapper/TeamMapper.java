@@ -21,6 +21,8 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 @RequiredArgsConstructor
 @Service
 public class TeamMapper {
@@ -29,17 +31,15 @@ public class TeamMapper {
 
 
     public Team mapsToEntity(TeamRequestTO teamRequestTO) {
-
         return new Team(teamRequestTO.getIds().stream()
                 .map(id -> playerRepository.findById(id)
                         .orElseThrow(() -> new NotFoundException("Player was not found for parameter {id:" + id + "}")))
-                .collect(Collectors.toList()));
+                .collect(toList()));
     }
 
-    public TeamTO mapsToTO(@NotNull Team team) {
-
+    public TeamTO mapsToTO(Team team) {
         return new TeamTO(team.getId(),
-                team.getPlayers().stream().map(playerMapper::mapsToTO).collect(Collectors.toList()),
+                team.getPlayers().stream().map(playerMapper::mapsToTO).collect(toList()),
                 team.getRankingPoints());
     }
 

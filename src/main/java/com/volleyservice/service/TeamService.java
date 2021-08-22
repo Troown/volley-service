@@ -1,6 +1,7 @@
 package com.volleyservice.service;
 
 import com.volleyservice.entity.Team;
+import com.volleyservice.exception.NotFoundException;
 import com.volleyservice.repository.TeamRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,8 @@ public class TeamService {
         return repository.save(team);
     }
 
-    public Optional<Team> findById(long id) {
-        return repository.findById(id);
-
+    public Team findById(long id) {
+        return repository.findById(id).orElseThrow(NotFoundException::withTeamNotFound);
     }
 
 }
