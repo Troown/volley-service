@@ -1,9 +1,6 @@
 package com.volleyservice.controller;
 
-import com.volleyservice.entity.Team;
 import com.volleyservice.entity.Tournament;
-import com.volleyservice.exception.ControllerHelper;
-import com.volleyservice.exception.NotFoundException;
 import com.volleyservice.mapper.TeamMapper;
 import com.volleyservice.mapper.TournamentMapper;
 import com.volleyservice.service.TeamService;
@@ -14,13 +11,10 @@ import com.volleyservice.to.TournamentTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -34,7 +28,6 @@ public class TeamController {
     private final TeamMapper teamMapper;
     private final TournamentService tournamentService;
     private final TournamentMapper tournamentMapper;
-    private final ControllerHelper controllerHelper;
 
     @GetMapping("/teams")
     ResponseEntity<CollectionModel<EntityModel<TeamTO>>> findAll() {
@@ -90,9 +83,9 @@ public class TeamController {
                         .findAllTeamsInTournament(updatedTournament.getId())).withRel("teams")
         );
 
-        return controllerHelper.tryCreateOrReturnBadRequest(tournamentResource);
+        return ResponseEntity.ok(updatedTournament);
     }
-
+    
 }
 
 

@@ -2,18 +2,16 @@ package com.volleyservice.mapper;
 
 import com.volleyservice.entity.*;
 import com.volleyservice.to.MatchTO;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MatchMapperTest {
     MatchMapper matchMapper = new MatchMapper();
+
     Team team1 = new Team(List.of(
             new Player("Mateo", "Martino"),
             new Player("Mateo", "Piano")));
@@ -38,7 +36,8 @@ class MatchMapperTest {
 //        given
         Match match = new Match(1, List.of(team1, team2));
         match.setSets(List.of(
-                new MatchSet(1, new SetResult(
+                new Set(1, 21,
+                        new SetResult(
                         new TeamSetPoint(team1, 21),
                         new TeamSetPoint(team2, 19)))));
 //        when
@@ -54,7 +53,8 @@ class MatchMapperTest {
 //        given
         Match match = new Match(1, List.of(team1, team2));
         match.setSets(List.of(
-                new MatchSet(1, new SetResult(
+                new Set(1, 21,
+                        new SetResult(
                         new TeamSetPoint(team1, 21),
                         new TeamSetPoint(team2, 21)))));
 //        when
@@ -71,13 +71,16 @@ class MatchMapperTest {
 //        given
         Match match = new Match(1, List.of(team1, team2));
         match.setSets(List.of(
-                new MatchSet(1, new SetResult(
+                new Set(1, 21,
+                        new SetResult(
                         new TeamSetPoint(team1, 21),
                         new TeamSetPoint(team2, 19))),
-                new MatchSet(2, new SetResult(
+                new Set(2, 21,
+                        new SetResult(
                         new TeamSetPoint(team1, 19),
                         new TeamSetPoint(team2, 21))),
-                new MatchSet(3, new SetResult(
+                new Set(3, 15,
+                        new SetResult(
                         new TeamSetPoint(team1, 15),
                         new TeamSetPoint(team2, 11)))));
 //        when
@@ -94,13 +97,16 @@ class MatchMapperTest {
 //        given
         Match match = new Match(1, List.of(team1, team2));
         match.setSets(List.of(
-                new MatchSet(1, new SetResult(
+                new Set(1, 21,
+                        new SetResult(
                         new TeamSetPoint(team1, 21),
                         new TeamSetPoint(team2, 19))),
-                new MatchSet(2, new SetResult(
+                new Set(2, 21,
+                        new SetResult(
                         new TeamSetPoint(team1, 19),
                         new TeamSetPoint(team2, 21))),
-                new MatchSet(3, new SetResult(
+                new Set(3, 15,
+                        new SetResult(
                         new TeamSetPoint(team1, 15),
                         new TeamSetPoint(team2, 15)))));
 //        when

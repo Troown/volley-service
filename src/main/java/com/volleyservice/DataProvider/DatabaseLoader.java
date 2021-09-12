@@ -1,4 +1,4 @@
-package com.volleyservice;
+package com.volleyservice.DataProvider;
 
 
 import com.volleyservice.entity.Player;

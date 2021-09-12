@@ -1,28 +1,40 @@
 package com.volleyservice.service;
 
+import com.volleyservice.SystemDataProvider.DoubleElimination;
+import com.volleyservice.SystemDataProvider.MatchesRelation;
 import com.volleyservice.entity.*;
 import com.volleyservice.enums.Phase;
 import com.volleyservice.exception.NotFoundException;
 import com.volleyservice.repository.TournamentRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
-
+import static org.mockito.Mockito.when;
+@ExtendWith(MockitoExtension.class)
 class MatchServiceTest {
-    private final Team r1 = new Team(List.of(new Player("Kuba", "Zdybek"),
-            new Player("Paweł", "Lewandowski")));
+    @Mock
+    private Team r1;
+    @Mock
+    private Team r16;
+    @Mock
+    private Team r2;
 
-    private final  Team r16 = new Team(List.of(new Player("Mateusz", "Kańczok"),
-            new Player("Maciej", "Kałuża")));
+    @Mock
+    private TournamentRepository repo;
+    @InjectMocks
+    private MatchService matchService;
 
-    private final TournamentRepository repo =
-            Mockito.mock(TournamentRepository.class);
-    private final MatchService matchService = new MatchService(repo);
+    private final DoubleElimination doubleElimination = new DoubleElimination();
 
     @Test
     public void shouldFindMatchByNumber() {
@@ -37,7 +49,7 @@ class MatchServiceTest {
                 )
         );
 
-        Mockito.when(repo.findById(3L))
+        when(repo.findById(3L))
                 .thenReturn(Optional.of(tournament));
 
 //        when
@@ -47,7 +59,6 @@ class MatchServiceTest {
         assertThat(result.getMatchNumber()).isEqualTo(3);
 
     }
-
     @Test
     public void shouldThrowNotFoundEx() {
 //        given
@@ -66,7 +77,7 @@ class MatchServiceTest {
                 )
         );
 
-        Mockito.when(repo.findById(tournamentId))
+        when(repo.findById(tournamentId))
                 .thenReturn(Optional.of(tournament));
 
 //        when
@@ -76,7 +87,6 @@ class MatchServiceTest {
         assertThat(thrown).isInstanceOf(NotFoundException.class)
                 .hasMessage("Match does not exist"); //TODO use MISSING_MATCH_ERR_MSG
     }
-
     @Test
     public void shouldFindAllMatchInTournament() {
         //        given
@@ -93,7 +103,7 @@ class MatchServiceTest {
                                 new Match(5),
                                 new Match(6)))));
 
-        Mockito.when(repo.findById(tournamentId))
+        when(repo.findById(tournamentId))
                 .thenReturn(Optional.of(tournament));
 //        when
         List<Match> result = matchService.findAlInTournament(3L);
@@ -101,38 +111,22 @@ class MatchServiceTest {
         assertThat(result.size()).isEqualTo(6);
     }
 
+    @Disabled
     @Test
-    public void shouldSetResultInGivenMatch() {
+    public void setTeamsInCorrespondingMatches() {
 //        given
-        Tournament tournament = new Tournament("My Cup");
-        tournament.setRounds(
-                List.of(
-                        new Round(1, Phase.FIRST_ROUND, List.of(
-                                new Match(1),
-                                new Match(2),
-                                new Match(3))),
-                        new Round(2, Phase.SECOND_ROUND, List.of(
-                                new Match(4),
-                                new Match(5),
-                                new Match(6)))));
-        Mockito.when(repo.findById(3L))
-                .thenReturn(Optional.of(tournament));
-        List<MatchSet> sets = List.of(
-                new MatchSet(1, new SetResult(
-                        new TeamSetPoint(r1, 21),
-                        new TeamSetPoint(r16, 19))),
-                new MatchSet(2, new SetResult(
-                        new TeamSetPoint(r1, 21),
-                        new TeamSetPoint(r16, 19))));
+        Tournament tournament = new Tournament("My CUP");
+        Match sourceMatch = new Match(1, List.of(r1, r16));
+        Match match9 = new Match(9);
+        Match match16 = new Match(16);
+        tournament.setRounds(List.of(new Round(1, Phase.FIRST_ROUND, List.of(sourceMatch, match9, match16))));
+        List<MatchesRelation> relations = doubleElimination.getMatchesRelations();
+
 //        when
-        Match result = matchService.saveResult(3, 4, sets);
+        List<Match> updatedMatches = matchService.updateRelatedMatches(sourceMatch, tournament, relations);
 //        then
-        assertThat(result.getSets().size()).isEqualTo(2);
-        assertThat(result.getWinner()).isEqualTo(Optional.of(r1));
-        assertThat(result.getSets().get(1)
-                .getSetResult().getFirstTeamSetResult().getTeam()).isEqualTo(r1);
+        assertThat(updatedMatches.size()).isEqualTo(2);
+        assertThat(updatedMatches.stream().filter(match -> match.getMatchNumber() == 9)
+                .findFirst().get().getTeams()).contains(sourceMatch.getWinner().get());
     }
-
-
-
 }

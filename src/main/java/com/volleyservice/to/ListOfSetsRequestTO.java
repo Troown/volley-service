@@ -7,5 +7,5 @@ import java.util.List;
 
 @Data
 public class ListOfSetsRequestTO {
-    private List<MatchSetRequestTO> sets;
+    private List<SetRequestTO> sets;
 }

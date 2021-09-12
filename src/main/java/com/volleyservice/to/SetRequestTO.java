@@ -8,8 +8,9 @@ import java.util.Map;
 
 @Data
 @NoArgsConstructor
-public class MatchSetRequestTO {
-    private Integer setNumber;
+public class SetRequestTO {
+    private int setNumber;
+    public int lastPoint;
     private long firstTeamId;
     private Integer firstTeamPoints;
     private long secondTeamId;

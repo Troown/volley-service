@@ -42,7 +42,7 @@ public class Team {
                 .collect(Collectors.joining("/"));
     }
 
-    public Integer evaluateRankingPoints() {
+    private Integer evaluateRankingPoints() {
         return this.players.stream().mapToInt(Player::getRankingPoints).sum();
     }
 

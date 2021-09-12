@@ -1,7 +1,6 @@
 package com.volleyservice.controller;
 
 import com.volleyservice.entity.Tournament;
-import com.volleyservice.exception.ControllerHelper;
 import com.volleyservice.mapper.TournamentMapper;
 import com.volleyservice.service.TournamentService;
 import com.volleyservice.to.TournamentRequestTO;
@@ -25,7 +24,6 @@ public class TournamentController {
 
     private final TournamentService tournamentService;
     private final TournamentMapper tournamentMapper;
-    private final ControllerHelper controllerHelper;
 
     @GetMapping("/")
     ResponseEntity<CollectionModel<EntityModel<TournamentTO>>> findAll() {
@@ -43,11 +41,7 @@ public class TournamentController {
     ResponseEntity<?> newTournament(@RequestBody TournamentRequestTO tournamentRequestTO) {
         Tournament savedTournament = tournamentService.save(tournamentMapper.mapsToEntity(tournamentRequestTO));
 
-        EntityModel<TournamentTO> tournamentResource = EntityModel.of(
-                tournamentMapper.mapsToTO(savedTournament),
-                linkTo(methodOn(TournamentController.class).findOne(savedTournament.getId())).withSelfRel()
-        );
-        return controllerHelper.tryCreateOrReturnBadRequest(tournamentResource);
+        return ResponseEntity.ok(tournamentMapper.mapsToTO(savedTournament));
     }
 
     @GetMapping("/{id}")

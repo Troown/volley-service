@@ -2,13 +2,15 @@ package com.volleyservice.to;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Value;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
+@Value
 public class TeamTO {
-    private Long id;
-    private List<PlayerTO> players;
-    private Integer points;
+    Long id;
+    List<PlayerTO> players;
+    Integer points;
 }

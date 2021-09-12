@@ -29,9 +29,9 @@ public class RestResponseEntityExceptionHandler
 
     @ExceptionHandler(ValidationException.class)
     protected ResponseEntity<Object> handleNotValidInputInRequestBody(
-            RuntimeException ex, WebRequest webRequest//, HttpServletRequest httpServletRequest, WebRequest webRequest
-    ) {
-        return handleExceptionInternal(ex, ex.getMessage(),
+            RuntimeException ex, WebRequest webRequest) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage(), webRequest.getContextPath());
+        return handleExceptionInternal(ex, apiError,
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
     }
 }

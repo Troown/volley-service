@@ -1,24 +1,22 @@
 package com.volleyservice.service;
 
-import com.volleyservice.entity.Match;
-import com.volleyservice.entity.MatchSet;
-import com.volleyservice.entity.Round;
+import com.volleyservice.SystemDataProvider.MatchesRelation;
+import com.volleyservice.entity.*;
 import com.volleyservice.exception.NotFoundException;
-import com.volleyservice.repository.MatchRepository;
 import com.volleyservice.repository.TournamentRepository;
-import com.volleyservice.to.MatchTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.toList;
 
 @Transactional
@@ -33,14 +31,6 @@ public class MatchService {
                 .getRounds().stream().map(Round::getMatches).flatMap(List::stream).collect(toList());
     }
 
-    public Match saveResult(long tourId, Integer matchNum, List<MatchSet> sets) {
-        Match matchToUpdate = findByMatchNumber(tourId, matchNum);
-
-        matchToUpdate.setSets(sets);
-
-        return matchToUpdate;
-    }
-
     public Match findByMatchNumber(long tournamentId, Integer matchNumber) {
         return tournamentRepository.findById(tournamentId)
                 .orElseThrow(NotFoundException::withTournamentNotFound)
@@ -48,4 +38,7 @@ public class MatchService {
                 .orElseThrow(NotFoundException::withMatchNotFound);
     }
 
+    public List<Match> updateRelatedMatches(Match sourceMatch, Tournament tournament, List<MatchesRelation> relations) {
+        return new ArrayList<>();
+    }
 }

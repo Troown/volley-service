@@ -27,7 +27,7 @@ public class RoundController {
     @PutMapping("/")
     public ResponseEntity<CollectionModel<EntityModel<RoundTO>>> generateRoundsForTournaments(@PathVariable long tournamentId) {
         List<EntityModel<RoundTO>> rounds = roundService.createAllRounds(tournamentId, 16).getRounds().stream()
-                .map(round -> EntityModel.of(roundMapper.mapsToTO(round),
+                .map(round -> EntityModel.of(roundMapper.mapToTO(round),
                         linkTo(methodOn(RoundController.class).findOne(tournamentId, round.getPhase())).withSelfRel()))
                 .collect(toList());
 
@@ -38,13 +38,13 @@ public class RoundController {
 
     @GetMapping("/{phase}")
     public ResponseEntity<RoundTO> findOne(@PathVariable long tournamentId, @PathVariable Phase phase) {
-        return ResponseEntity.ok(roundMapper.mapsToTO(roundService.findByPhase(tournamentId, phase)));
+        return ResponseEntity.ok(roundMapper.mapToTO(roundService.findByPhase(tournamentId, phase)));
     }
 
     @GetMapping("/")
     public ResponseEntity<List<RoundTO>> findAll(@PathVariable long tournamentId) {
         return ResponseEntity.ok(roundService.findAlInTournament(tournamentId)
-                .stream().map(roundMapper::mapsToTO).collect(toList()));
+                .stream().map(roundMapper::mapToTO).collect(toList()));
 
     }
 
