@@ -4,25 +4,31 @@ import com.volleyservice.entity.Tournament;
 import com.volleyservice.mapper.RoundMapper;
 import com.volleyservice.service.RoundService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class RoundControllerTest {
 
-    private final RoundService roundService =
-            Mockito.mock(RoundService.class);
+    @Mock
+    private RoundService roundService;
+    @Mock
+    private RoundMapper roundMapper;
+    @InjectMocks
+    RoundController roundController;
 
-    private final RoundMapper roundMapper =
-            Mockito.mock(RoundMapper.class);
-
-    RoundController roundController = new RoundController(roundService, roundMapper);
     @Test
     void shouldReturnStatusOkWhenRoundsNotSet() {
 //        given
         Tournament tournament = new Tournament("My CUP");
-        Mockito.when(roundService.findAlInTournament(3L)).thenReturn(tournament.getRounds());
+        when(roundService.findAlInTournament(3L)).thenReturn(tournament.getRounds());
 //        when
         var result = roundController.findAll(3L);
 

@@ -41,20 +41,6 @@ public class Tournament {
         this.city = city;
     }
 
-    public void setTeamsInFirstRound() {
-
-        this.getRounds().get(0).setMatches(List.of(
-                new Match(1, List.of(this.registeredTeams.get(0), this.registeredTeams.get(15))),
-                new Match(2, List.of(this.registeredTeams.get(8), this.registeredTeams.get(7))),
-                new Match(3, List.of(this.registeredTeams.get(4), this.registeredTeams.get(11))),
-                new Match(4, List.of(this.registeredTeams.get(12), this.registeredTeams.get(3))),
-                new Match(5, List.of(this.registeredTeams.get(2), this.registeredTeams.get(13))),
-                new Match(6, List.of(this.registeredTeams.get(10), this.registeredTeams.get(5))),
-                new Match(7, List.of(this.registeredTeams.get(6), this.registeredTeams.get(9))),
-                new Match(8, List.of(this.registeredTeams.get(14), this.registeredTeams.get(1)))
-        ));
-    }
-
     public Optional<Match> findMatchByNumber(Integer matchNumber) {
 
         return this.rounds.stream()

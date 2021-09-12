@@ -6,7 +6,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class MatchesRelations {
+public class MatchesRelation {
     private Integer sourceMatchNumber;
     private Integer destinationMatchNumber;
     private Integer result;

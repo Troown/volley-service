@@ -16,19 +16,16 @@ public class Match {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
-            name ="UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
-
     private int matchNumber;
-
     @ManyToMany(cascade = {CascadeType.ALL})
     private List<Team> teams;
-
     @OneToMany(cascade = {CascadeType.ALL})
-    private List<MatchSet> sets;
+    private List<Set> sets;
+    private int numberOfSetsToWinTheMatch;
 
     public Match(int matchNumber) {
         this.matchNumber = matchNumber;
@@ -40,27 +37,23 @@ public class Match {
         this.matchNumber = matchNumber;
         this.teams = teams;
         this.sets = new ArrayList<>();
+        this.numberOfSetsToWinTheMatch = 2;
     }
 
     public Optional<Team> getWinner() {
         return this.sets.stream()
-                .map(matchSet -> matchSet.getSetResult().getWinnerOfSet()).flatMap(Optional::stream)
+                .map(set -> set.getSetResult().getSetWinner()).flatMap(Optional::stream)
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .entrySet()
                 .stream()
                 .max(Map.Entry.comparingByValue())
-                .filter(entry -> entry.getValue() == 2)
+                .filter(entry -> entry.getValue() == this.numberOfSetsToWinTheMatch)
                 .map(Map.Entry::getKey);
     }
 
     public Optional<Team> getLoser() {
-        return this.sets.stream()
-                .map(matchSet -> matchSet.getSetResult().getLoserOfSet()).flatMap(Optional::stream)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .entrySet()
-                .stream()
-                .max(Map.Entry.comparingByValue())
-                .filter(entry -> entry.getValue() == 2)
-                .map(Map.Entry::getKey);
+        return teams.stream()
+                .filter(team -> getWinner().isPresent() && !team.equals(getWinner().get()))
+                .findFirst();
     }
 }

@@ -1,29 +1,44 @@
 package com.volleyservice.mapper;
 
+import com.volleyservice.DataProvider.MyClock;
+import com.volleyservice.entity.Player;
+import com.volleyservice.to.PlayerTO;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.assertThat;
-
-
-class PlayerMapperTest {
-
-    private final PlayerMapper playerMapper = new PlayerMapper();
+import static org.mockito.Mockito.when;
+@ExtendWith(MockitoExtension.class)
+public class PlayerMapperTest {
+    @Mock
+    private Player player;
+    MyClock myClock = new MyClock();
+    private final PlayerMapper playerMapper = new PlayerMapper(myClock);
 
     @Test
-    void isAdult() {
+    public void shouldReturnTrueWhenPlayerHasEighteenBirthdayToday() {
 //        given
-        LocalDate eighteenthBirthDayYesterday = LocalDate.now().minusYears(18).minusDays(1);
         LocalDate eighteenthBirthdayToday = LocalDate.now().minusYears(18);
-        LocalDate eighteenthBirthdayTomorrow = LocalDate.now().minusDays(18).plusDays(1);
-
+        when(player.getDateOfBirth()).thenReturn(eighteenthBirthdayToday);
 //        when
-        var isAdultAtTheAgeOf18andOneDay = playerMapper.isAdult(eighteenthBirthDayYesterday);
-        var isAdultAtTheAgeOf18Exactly = playerMapper.isAdult(eighteenthBirthdayToday);
-        var isAdultAtTheAgeOf17 = playerMapper.isAdult(eighteenthBirthdayTomorrow);
-
+        PlayerTO result = playerMapper.mapsToTO(player);
 //        then
-        assertThat(isAdultAtTheAgeOf18andOneDay).isEqualTo(true);
-        assertThat(isAdultAtTheAgeOf18Exactly).isEqualTo(true);
-        assertThat(isAdultAtTheAgeOf17).isEqualTo(false);
+        assertThat(result.isAdult()).isTrue();
+    }
+
+    @Test
+    public void shouldReturnFalseWhenYearOfBirthIsInTheFuture() {
+        //        given
+        LocalDate eighteenthBirthdayToday = LocalDate.now().plusYears(100);
+        when(player.getDateOfBirth()).thenReturn(eighteenthBirthdayToday);
+//        when
+        PlayerTO result = playerMapper.mapsToTO(player);
+//        then
+        assertThat(result.isAdult()).isFalse();
     }
 }

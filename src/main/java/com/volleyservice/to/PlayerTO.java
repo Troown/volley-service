@@ -12,9 +12,9 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Data
 public class PlayerTO {
-    Long id;
-    String name;
-    String surname;
-    Integer rankingPoints;
-    boolean isAdult;
+    private Long id;
+    private String name;
+    private String surname;
+    private Integer rankingPoints;
+    private boolean isAdult;
 }

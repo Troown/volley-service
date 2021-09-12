@@ -9,7 +9,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Data
-public class MatchesToRoundsRelations {
+public class MatchesToRoundRelation {
     private Integer roundNumber;
     private Phase phase;
     private List<Integer> matchNumbers;

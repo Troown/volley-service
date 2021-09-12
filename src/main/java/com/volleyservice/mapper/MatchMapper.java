@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -22,7 +21,7 @@ public class MatchMapper {
     }
 
     private Long getNumberOfSetsWonByTeam(Match match, Team team) {
-        return match.getSets().stream().map(MatchSet::getSetResult).map(SetResult::getWinnerOfSet)
+        return match.getSets().stream().map(Set::getSetResult).map(SetResult::getSetWinner)
                 .flatMap(Optional::stream)
                 .filter(winner -> winner.equals(team)).count();
     }

@@ -1,14 +1,8 @@
 package com.volleyservice.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import com.volleyservice.entity.Player;
 
 import com.volleyservice.exception.ControllerHelper;
-import com.volleyservice.exception.NotFoundException;
 import com.volleyservice.mapper.PlayerMapper;
 import com.volleyservice.service.PlayerService;
 import com.volleyservice.to.PlayerRequestTO;
@@ -16,14 +10,10 @@ import com.volleyservice.to.PlayerTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,7 +49,7 @@ public class PlayerController {
         EntityModel<PlayerTO> playerResource = EntityModel.of(playerMapper.mapsToTO(savedPlayer), //
                 linkTo(methodOn(PlayerController.class).findOne(savedPlayer.getId())).withSelfRel(),
                 linkTo(methodOn(PlayerController.class).findAll()).withRel("players"));
-        return controllerHelper.tryCreateOrReturnBadRequest(playerResource);
+        return controllerHelper.createOrReturnBadRequest(playerResource);
     }
 
     @GetMapping("/{id}")

@@ -1,13 +1,9 @@
 package com.volleyservice.entity;
 
 import lombok.*;
-import org.apache.catalina.LifecycleState;
-import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Data
@@ -17,34 +13,53 @@ public class SetResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     Long id;
-
     @OneToOne(cascade = {CascadeType.ALL})
     private TeamSetPoint firstTeamSetResult;
-
     @OneToOne(cascade = {CascadeType.ALL})
     private TeamSetPoint secondTeamSetResult;
+    private int lastPoint;
 
     public SetResult(TeamSetPoint firstTeamSetResult, TeamSetPoint secondTeamSetResult) {
         this.firstTeamSetResult = firstTeamSetResult;
         this.secondTeamSetResult = secondTeamSetResult;
     }
 
-    public Optional<Team> getWinnerOfSet() {
-        return getWinner(firstTeamSetResult, secondTeamSetResult).map(TeamSetPoint::getTeam);
+    public SetResult(TeamSetPoint firstTeamSetResult, TeamSetPoint secondTeamSetResult, int lastPoint) {
+        this.firstTeamSetResult = firstTeamSetResult;
+        this.secondTeamSetResult = secondTeamSetResult;
+        this.lastPoint = lastPoint;
     }
 
-    public Optional<Team> getLoserOfSet() {
-        return List.of(firstTeamSetResult.getTeam(),
-                secondTeamSetResult.getTeam()).stream()
-                .filter(team -> !Optional.of(team).equals(getWinnerOfSet()) && getWinnerOfSet().isPresent())
+    private boolean isTwoPointsDifferent() {
+        return Math.abs(firstTeamSetResult.getPoints() - secondTeamSetResult.getPoints()) >= 2;
+    }
+
+    private boolean isLastPointAchieved() {
+        return this.firstTeamSetResult.getPoints() >= this.lastPoint ||
+                this.secondTeamSetResult.getPoints() >= this.lastPoint;
+    }
+
+    public Optional<Team> getSetWinner() {
+        if (isTwoPointsDifferent() && isLastPointAchieved()) {
+            return getTeamWithHigherNumberOfPoints();
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Team> getSetLoser() {
+        return List.of(this.firstTeamSetResult.getTeam(),
+                this.secondTeamSetResult.getTeam())
+                .stream()
+                .filter(team -> getSetWinner().isPresent() && !team.equals(getSetWinner().get()))
                 .findFirst();
     }
 
-    private Optional<TeamSetPoint> getWinner(TeamSetPoint firstTeamSetResult, TeamSetPoint secondTeamSetResult) {
-        if (firstTeamSetResult.compareTo(secondTeamSetResult) == 1) {
-            return Optional.of(firstTeamSetResult);
-        } else if (firstTeamSetResult.compareTo(secondTeamSetResult) == -1) {
-            return Optional.of(secondTeamSetResult);
+    private Optional<Team> getTeamWithHigherNumberOfPoints() {
+        if (firstTeamSetResult.compareTo(secondTeamSetResult) > 0) {
+            return Optional.of(firstTeamSetResult.getTeam());
+        } else if (firstTeamSetResult.compareTo(secondTeamSetResult) < 0){
+            return Optional.of(secondTeamSetResult.getTeam());
         } else return Optional.empty();
     }
 }

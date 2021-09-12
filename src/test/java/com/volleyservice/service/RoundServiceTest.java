@@ -8,7 +8,11 @@ import com.volleyservice.enums.Phase;
 import com.volleyservice.exception.NotFoundException;
 import com.volleyservice.repository.TournamentRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,15 +20,16 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class RoundServiceTest {
-
-    private final TournamentRepository tournamentRepository =
-            Mockito.mock(TournamentRepository.class);
-
-    private final DoubleElimination dE = Mockito.mock(DoubleElimination.class);
-
-    private final RoundService roundService = new RoundService(tournamentRepository, dE);
+    @Mock
+    private TournamentRepository tournamentRepository;
+    @Mock
+    private DoubleElimination dE;
+    @InjectMocks
+    private RoundService roundService;
 
     @Test
     void shouldReturnAllRoundsFromTournament() {
@@ -49,12 +54,13 @@ class RoundServiceTest {
                                 new Match(10),
                                 new Match(11),
                                 new Match(12)))));
-        Mockito.when(tournamentRepository.findById(tournamentId))
+        when(tournamentRepository.findById(tournamentId))
                 .thenReturn(Optional.of(tournament));
 //        when
         List<Round> result = roundService.findAlInTournament(tournamentId);
 //        them
         assertThat(result.size()).isEqualTo(3);
+        verifyNoMoreInteractions(tournamentRepository);
     }
 
     @Test
@@ -62,14 +68,13 @@ class RoundServiceTest {
 //        given
         long tournamentId = 3;
         Tournament tournament = new Tournament("My Cup");
-        Mockito.when(tournamentRepository.findById(tournamentId))
+        when(tournamentRepository.findById(tournamentId))
                 .thenReturn(Optional.of(tournament));
 //        when
         List<Round> result = roundService.findAlInTournament(tournamentId);
 //        them
         assertThat(result).isEmpty();
     }
-
 
     @Test
     void shouldFindRoundByPhase() {
@@ -96,7 +101,7 @@ class RoundServiceTest {
                                 new Match(12)))
                 )
         );
-        Mockito.when(tournamentRepository.findById(tournamentId))
+        when(tournamentRepository.findById(tournamentId))
                 .thenReturn(Optional.of(tournament));
 
 //        when
@@ -135,7 +140,7 @@ class RoundServiceTest {
                                 new Match(12)))
                 )
         );
-        Mockito.when(tournamentRepository.findById(tournamentId))
+        when(tournamentRepository.findById(tournamentId))
                 .thenReturn(Optional.of(tournament));
 
 //        when
@@ -145,4 +150,5 @@ class RoundServiceTest {
         assertThat(thrown).isInstanceOf(NotFoundException.class)
                 .hasMessage("Round does not exist");
     }
+
 }

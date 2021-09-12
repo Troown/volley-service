@@ -47,7 +47,7 @@ public class TournamentController {
                 tournamentMapper.mapsToTO(savedTournament),
                 linkTo(methodOn(TournamentController.class).findOne(savedTournament.getId())).withSelfRel()
         );
-        return controllerHelper.tryCreateOrReturnBadRequest(tournamentResource);
+        return controllerHelper.createOrReturnBadRequest(tournamentResource);
     }
 
     @GetMapping("/{id}")
