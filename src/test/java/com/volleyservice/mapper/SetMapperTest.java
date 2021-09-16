@@ -70,18 +70,4 @@ class SetMapperTest {
                 .hasMessage("Team does not exist for id = 16");
 //TODO        ex message could contains two ids if both are not in repo.
     }
-
-    @Test
-    void shouldTransferToTO() {
-//        given
-        Set set = new Set(1, 21,
-                new SetResult(
-                        new TeamSetPoint(firstTeam, 21),
-                        new TeamSetPoint(secondTeam, 19)));
-//        when
-        SetTO result = setMapper.mapsToTO(set);
-//        then
-        assertThat(result).isInstanceOf(SetTO.class);
-        assertThat(result.getSetNumber()).isEqualTo(1);
-    }
 }

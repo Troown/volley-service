@@ -64,6 +64,7 @@ public class ValidateSetTest {
 //        then
         assertThat(result).isEqualTo(true);
     }
+
     @Test
     void shouldReturnFalseWhenTeamsPropertyIsEmpty() {
         //given
