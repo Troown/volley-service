@@ -1,19 +1,17 @@
 package com.volleyservice.to;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Table;
-
+import javax.validation.constraints.NotBlank;
+@Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Table(name="player")
+@Value
 public class PlayerTO {
+    Long id;
     String name;
     String surname;
-    int number;
-    String teamName;
+    Integer rankingPoints;
     boolean isAdult;
 }
