@@ -1,10 +1,12 @@
 package com.volleyservice.myUtils;
 
+import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class SlashyDateConverter implements ArgumentConverter {
     @Override
@@ -15,12 +17,9 @@ public class SlashyDateConverter implements ArgumentConverter {
                     "The argument should be a string: " + source);
         }
         try {
-            String[] parts = ((String) source).split("/");
-            int year = Integer.parseInt(parts[0]);
-            int month = Integer.parseInt(parts[1]);
-            int day = Integer.parseInt(parts[2]);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            return LocalDate.parse((String) source, formatter);
 
-            return LocalDate.of(year, month, day);
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to convert", e);
         }
